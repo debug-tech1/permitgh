@@ -1,8 +1,17 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { computeServiceTypeStats } from "@/lib/stats";
 import { ServicePerformancePanel } from "@/components/service-performance-panel";
+import { getSession, homeRouteForRole } from "@/lib/auth";
 
 export default async function PublicDashboardPage() {
+  // The public dashboard is for visitors who haven't signed in — anyone
+  // logged in already has a role-specific home (admin's performance view,
+  // a citizen's requests, an officer's queue) that's more useful to land on
+  // than the anonymous transparency page.
+  const session = await getSession();
+  if (session) redirect(homeRouteForRole(session.role));
+
   const stats = await computeServiceTypeStats();
 
   return (

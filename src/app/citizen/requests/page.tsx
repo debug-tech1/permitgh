@@ -4,6 +4,7 @@ import { getSession } from "@/lib/auth";
 import { isOverdue } from "@/lib/sla";
 import { formatFee } from "@/lib/format";
 import { StatusBadge, OverdueBadge } from "@/components/status-badge";
+import { CitizenTabs } from "@/components/citizen/citizen-tabs";
 
 export default async function MyRequestsPage() {
   const session = await getSession();
@@ -24,17 +25,11 @@ export default async function MyRequestsPage() {
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="font-display text-2xl font-semibold text-ink">My Requests</h1>
-          <p className="mt-1 text-sm text-ink-soft">Every application you&apos;ve submitted, and where it stands.</p>
-        </div>
-        <Link
-          href="/citizen/requests/new"
-          className="rounded-sm bg-accent px-4 py-2 text-sm font-semibold text-paper hover:opacity-90"
-        >
-          New request
-        </Link>
+      <CitizenTabs active="requests" />
+
+      <div className="mt-6">
+        <h1 className="font-display text-2xl font-semibold text-ink">My Requests</h1>
+        <p className="mt-1 text-sm text-ink-soft">Every application you&apos;ve submitted, and where it stands.</p>
       </div>
 
       {(approvedRequests.length > 0 || billedUnpaidRequests.length > 0 || infoNeededRequests.length > 0) && (

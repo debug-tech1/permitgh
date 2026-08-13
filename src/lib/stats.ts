@@ -54,6 +54,20 @@ export async function computeServiceTypeStats(): Promise<ServiceTypeStats[]> {
   });
 }
 
+// The nav bar's notification bell — count of a citizen's requests that need
+// them to actually do something (upload docs, or pay a bill), not just
+// requests in progress generally. Deliberately excludes "approved", which
+// already gets a prominent banner and isn't an outstanding action.
+export async function countCitizenActionableRequests(citizenId: string): Promise<number> {
+  return prisma.serviceRequest.count({
+    where: {
+      citizenId,
+      status: { notIn: ["approved", "rejected"] },
+      OR: [{ status: "additional_info_needed" }, { AND: [{ feeGhs: { not: null } }, { paidAt: null }] }],
+    },
+  });
+}
+
 export type OfficerWorkload = {
   officerId: string;
   officerName: string;
