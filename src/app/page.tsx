@@ -6,7 +6,7 @@ import { AuthTabs } from "@/components/auth/auth-tabs";
 const WHAT_YOU_CAN_DO = [
   {
     title: "Apply online",
-    body: "Choose a service, attach your documents, and track your application from your phone — no office visit needed just to check status.",
+    body: "Choose a service, attach your documents, and track your application from your phone. No office visit needed just to check status.",
   },
   {
     title: "Know your deadline",
@@ -14,7 +14,7 @@ const WHAT_YOU_CAN_DO = [
   },
   {
     title: "See the record",
-    body: "A public dashboard shows how each service is actually performing against its own promise — no account needed to look.",
+    body: "A public dashboard shows how each service is actually performing against its own promise. No account needed to look.",
   },
 ] as const;
 
@@ -31,11 +31,11 @@ export default async function WelcomePage() {
         <p className="text-xs font-semibold tracking-wide text-brass uppercase">Welcome</p>
         <h1 className="mt-2 font-display text-3xl font-semibold text-ink">Welcome to PermitGH</h1>
         <p className="mt-3 text-sm text-ink-soft">
-          PermitGH is the Assembly&apos;s home for permit and service applications — a Business Operating Permit, a
+          PermitGH is the Assembly&apos;s home for permit and service applications: a Business Operating Permit, a
           Building Permit, a Market Stall Permit, or an annual Property Rate assessment. The moment you submit, your
           application gets a clear turnaround deadline. Case officers work each service&apos;s queue, bill and
           confirm payment through the Assembly&apos;s usual channels, and move your application through to a
-          decision — with every status change kept on record.
+          decision, with every status change kept on record.
         </p>
       </div>
 

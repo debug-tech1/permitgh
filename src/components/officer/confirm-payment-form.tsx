@@ -11,7 +11,7 @@ export function ConfirmPaymentForm({ requestId }: { requestId: string }) {
   return (
     <form action={formAction} className="flex flex-wrap items-center gap-3 border border-status-warn/40 bg-status-warn/10 p-3">
       <input type="hidden" name="requestId" value={requestId} />
-      <p className="text-sm text-status-warn">Billed — awaiting payment confirmation before this can be approved.</p>
+      <p className="text-sm text-status-warn">Billed. Awaiting payment confirmation before this can be approved.</p>
       <button
         type="submit"
         disabled={pending}

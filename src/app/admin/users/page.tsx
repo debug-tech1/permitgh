@@ -20,7 +20,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
         <div>
           <h1 className="font-display text-2xl font-semibold text-ink">Users</h1>
           <p className="mt-1 text-sm text-ink-soft">
-            Every citizen, officer, and admin account. Resetting a password takes effect immediately — there&apos;s
+            Every citizen, officer, and admin account. Resetting a password takes effect immediately. There&apos;s
             no email link, so relay the new password to them directly.
           </p>
         </div>
@@ -71,7 +71,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                       {u.gpsAddress && <span className="block text-xs">{u.gpsAddress}</span>}
                     </>
                   ) : (
-                    "—"
+                    "N/A"
                   )}
                 </td>
                 <td className="px-4 py-3">
@@ -83,7 +83,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                   {u.role === "officer" && (u.assignedServiceType?.name ?? "Unassigned")}
                   {u.role === "citizen" &&
                     `${u._count.requestsSubmitted} request${u._count.requestsSubmitted === 1 ? "" : "s"} submitted`}
-                  {u.role === "admin" && "—"}
+                  {u.role === "admin" && "N/A"}
                 </td>
                 <td className="px-4 py-3 text-ink-soft tabular-nums">{u.createdAt.toLocaleDateString()}</td>
                 <td className="px-4 py-3">

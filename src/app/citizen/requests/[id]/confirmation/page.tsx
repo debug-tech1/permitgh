@@ -75,7 +75,7 @@ export default async function ApprovalConfirmationPage({ params }: PageProps<"/c
           </div>
           <div>
             <dt className="text-xs tracking-wide text-ink-soft uppercase">Issued by</dt>
-            <dd className="mt-1 font-medium text-ink">{approval?.changedBy.name ?? "—"}</dd>
+            <dd className="mt-1 font-medium text-ink">{approval?.changedBy.name ?? "N/A"}</dd>
           </div>
           <div>
             <dt className="text-xs tracking-wide text-ink-soft uppercase">Fee</dt>
@@ -83,7 +83,7 @@ export default async function ApprovalConfirmationPage({ params }: PageProps<"/c
               {/* Approval is blocked until an officer assesses the fee (see
                   actions/officer-actions.ts), so feeGhs is never null here —
                   the fallback is just to satisfy the nullable type. */}
-              {request.feeGhs !== null ? formatFee(request.feeGhs) : "—"}
+              {request.feeGhs !== null ? formatFee(request.feeGhs) : "N/A"}
               {request.sizeTier && <span className="text-ink-soft"> ({request.sizeTier})</span>}
             </dd>
           </div>
@@ -98,9 +98,9 @@ export default async function ApprovalConfirmationPage({ params }: PageProps<"/c
 
         <p className="mt-8 border-t border-line pt-4 text-xs text-ink-soft">
           This is a system-generated confirmation of an approval recorded in PermitGH on{" "}
-          {(approval?.changedAt ?? new Date()).toLocaleString()}. It is not a legally binding permit certificate —
-          contact the Assembly directly to verify or obtain an official document. The fee shown is informational;
-          PermitGH does not collect payment — pay through the Assembly&apos;s existing payment channels.
+          {(approval?.changedAt ?? new Date()).toLocaleString()}. It is not a legally binding permit certificate.
+          Contact the Assembly directly to verify or obtain an official document. The fee shown is informational;
+          PermitGH does not collect payment. Pay through the Assembly&apos;s existing payment channels.
         </p>
       </div>
 

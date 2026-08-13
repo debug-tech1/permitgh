@@ -25,7 +25,7 @@ export function ResetPasswordForm({ userId, userName }: { userId: string; userNa
       </button>
       {state?.newPassword && (
         <p className="max-w-[220px] text-right text-xs text-status-ok">
-          New password: <span className="font-mono font-semibold">{state.newPassword}</span> — share this with them
+          New password: <span className="font-mono font-semibold">{state.newPassword}</span>. Share this with them
           directly. It won&apos;t be shown again.
         </p>
       )}

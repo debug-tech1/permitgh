@@ -54,7 +54,7 @@ export default async function MyRequestsPage() {
               className="flex flex-wrap items-center justify-between gap-3 border border-status-warn/40 bg-status-warn/10 px-4 py-3"
             >
               <p className="text-sm font-medium text-status-warn">
-                Your {r.serviceType.name} has been billed: {r.feeGhs !== null ? formatFee(r.feeGhs) : ""} — payment
+                Your {r.serviceType.name} has been billed: {r.feeGhs !== null ? formatFee(r.feeGhs) : ""}. Payment
                 due.
               </p>
               <Link

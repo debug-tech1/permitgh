@@ -21,7 +21,7 @@ export function AssessFeeForm({ requestId, tiers }: { requestId: string; tiers: 
           </option>
           {tiers.map((t) => (
             <option key={t.label} value={t.label}>
-              {t.label} — {formatFee(t.feeGhs)}
+              {t.label}: {formatFee(t.feeGhs)}
             </option>
           ))}
         </select>

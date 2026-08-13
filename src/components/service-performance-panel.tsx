@@ -112,7 +112,7 @@ function ServiceCard({ stats }: { stats: ServiceTypeStats }) {
         </div>
         <div>
           <dt className="text-ink-soft">Avg. days</dt>
-          <dd className="mt-0.5 font-semibold text-ink tabular-nums">{stats.avgResolutionDays ?? "—"}</dd>
+          <dd className="mt-0.5 font-semibold text-ink tabular-nums">{stats.avgResolutionDays ?? "N/A"}</dd>
         </div>
       </dl>
     </article>
@@ -185,10 +185,10 @@ export function ServicePerformancePanel({ stats, idPrefix }: { stats: ServiceTyp
                 </td>
                 <td className="px-4 py-3 tabular-nums">{s.resolvedCount}</td>
                 <td className="px-4 py-3 tabular-nums">
-                  {s.avgResolutionDays !== null ? `${s.avgResolutionDays}d` : "—"}
+                  {s.avgResolutionDays !== null ? `${s.avgResolutionDays}d` : "N/A"}
                 </td>
                 <td className="px-4 py-3 tabular-nums">
-                  {s.withinSlaPercent !== null ? `${s.withinSlaPercent}%` : "—"}
+                  {s.withinSlaPercent !== null ? `${s.withinSlaPercent}%` : "N/A"}
                 </td>
               </tr>
             ))}

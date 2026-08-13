@@ -42,7 +42,7 @@ export default async function RequestDetailPage({ params }: PageProps<"/citizen/
 
       {request.status === "approved" && (
         <div className="mt-4 flex items-center justify-between border border-status-ok/40 bg-status-ok/10 px-4 py-3">
-          <p className="text-sm font-medium text-status-ok">Approved — your confirmation is ready.</p>
+          <p className="text-sm font-medium text-status-ok">Approved. Your confirmation is ready.</p>
           <Link
             href={`/citizen/requests/${request.id}/confirmation`}
             className="text-sm font-semibold text-status-ok hover:underline"
@@ -58,7 +58,7 @@ export default async function RequestDetailPage({ params }: PageProps<"/citizen/
             Billed: {request.billingDetail ?? formatFee(request.feeGhs)}
           </p>
           <p className="mt-1 text-xs text-ink-soft">
-            Arrange payment with the Assembly through their existing channels — PermitGH doesn&apos;t collect
+            Arrange payment with the Assembly through their existing channels. PermitGH doesn&apos;t collect
             payment. Your officer can move this request toward approval once payment is confirmed.
           </p>
         </div>
@@ -84,7 +84,7 @@ export default async function RequestDetailPage({ params }: PageProps<"/citizen/
         <div>
           <dt className="text-xs tracking-wide text-ink-soft uppercase">Resolved</dt>
           <dd className="mt-1 font-medium text-ink">
-            {request.resolvedAt ? request.resolvedAt.toLocaleDateString() : "—"}
+            {request.resolvedAt ? request.resolvedAt.toLocaleDateString() : "N/A"}
           </dd>
         </div>
         <div className="col-span-2">
@@ -93,7 +93,7 @@ export default async function RequestDetailPage({ params }: PageProps<"/citizen/
             {request.feeGhs !== null ? (
               <>
                 {request.billingDetail ?? formatFee(request.feeGhs)}
-                {" — "}
+                {" · "}
                 {request.paidAt ? (
                   <span className="text-status-ok">paid {request.paidAt.toLocaleDateString()}</span>
                 ) : (

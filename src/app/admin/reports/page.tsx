@@ -69,7 +69,7 @@ export default async function AdminReportsPage({ searchParams }: PageProps<"/adm
       </form>
 
       <div className="mt-8">
-        <p className="font-display text-lg font-semibold text-ink">PermitGH — Operations Report</p>
+        <p className="font-display text-lg font-semibold text-ink">PermitGH: Operations Report</p>
         <p className="text-xs text-ink-soft">
           {from ? from.toLocaleDateString() : "Start"} – {to ? to.toLocaleDateString() : "Present"} &middot;
           Generated {new Date().toLocaleString()}
@@ -79,13 +79,13 @@ export default async function AdminReportsPage({ searchParams }: PageProps<"/adm
           <StatTile label="Total requests" value={report.totalRequests} />
           <StatTile label="Approved" value={report.approvedCount} />
           <StatTile label="Rejected" value={report.rejectedCount} />
-          <StatTile label="Within SLA" value={report.withinSlaPercent !== null ? `${report.withinSlaPercent}%` : "—"} />
+          <StatTile label="Within SLA" value={report.withinSlaPercent !== null ? `${report.withinSlaPercent}%` : "N/A"} />
           <StatTile label="Fees billed" value={formatFee(report.feesBilledGhs)} />
           <StatTile label="Fees collected" value={formatFee(report.feesCollectedGhs)} />
           <StatTile label="Waived" value={formatFee(report.waivedGhs)} />
           <StatTile
             label="Collection rate"
-            value={report.feesBilledGhs > 0 ? `${Math.round((report.feesCollectedGhs / report.feesBilledGhs) * 100)}%` : "—"}
+            value={report.feesBilledGhs > 0 ? `${Math.round((report.feesCollectedGhs / report.feesBilledGhs) * 100)}%` : "N/A"}
           />
         </div>
 
@@ -115,10 +115,10 @@ export default async function AdminReportsPage({ searchParams }: PageProps<"/adm
                   <td className="px-4 py-3 tabular-nums">{formatFee(r.feesCollectedGhs)}</td>
                   <td className="px-4 py-3 tabular-nums">{formatFee(r.waivedGhs)}</td>
                   <td className="px-4 py-3 tabular-nums">
-                    {r.avgResolutionDays !== null ? `${r.avgResolutionDays}d` : "—"}
+                    {r.avgResolutionDays !== null ? `${r.avgResolutionDays}d` : "N/A"}
                   </td>
                   <td className="px-4 py-3 tabular-nums">
-                    {r.withinSlaPercent !== null ? `${r.withinSlaPercent}%` : "—"}
+                    {r.withinSlaPercent !== null ? `${r.withinSlaPercent}%` : "N/A"}
                   </td>
                 </tr>
               ))}

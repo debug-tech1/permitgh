@@ -123,14 +123,14 @@ export default async function AdminDashboardPage() {
         </div>
         <div className="text-right text-xs text-[var(--console-ink-soft)]">
           <p>Last updated {new Date().toLocaleString()}</p>
-          <p>PermitGH — Municipal Assembly</p>
+          <p>PermitGH, Municipal Assembly</p>
         </div>
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <KpiCard label="Open requests" value={totals.open} />
         <KpiCard label="Currently overdue" value={totals.overdue} critical={totals.overdue > 0} />
-        <KpiCard label="Avg. processing" value={avgProcessing !== null ? `${avgProcessing}d` : "—"} />
+        <KpiCard label="Avg. processing" value={avgProcessing !== null ? `${avgProcessing}d` : "N/A"} />
         <KpiCard label="Resolved to date" value={totals.resolved} />
       </div>
 

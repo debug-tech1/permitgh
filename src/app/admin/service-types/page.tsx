@@ -11,7 +11,7 @@ export default async function ServiceTypesPage() {
       <h1 className="font-display text-2xl font-semibold text-ink">Service Types</h1>
       <p className="mt-1 max-w-xl text-sm text-ink-soft">
         Set the SLA and base fee for each service. Changing either only affects requests submitted after the
-        change — it never moves an in-flight request&apos;s deadline or the fee it was shown.
+        change. It never moves an in-flight request&apos;s deadline or the fee it was shown.
       </p>
 
       <ul className="mt-6 divide-y divide-line border border-line">

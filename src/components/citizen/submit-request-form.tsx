@@ -46,13 +46,13 @@ export function SubmitRequestForm({ serviceTypes }: { serviceTypes: ServiceTypeO
               </span>
               {isBuildingPermit && (
                 <span className="mt-1 block text-xs text-ink-soft">
-                  Cost is rate × floor area, plus a processing charge — the officer sets the exact figure after
+                  Cost is rate × floor area, plus a processing charge. The officer sets the exact figure after
                   reviewing your site plan, not you.
                 </span>
               )}
               {!isBuildingPermit && st.feeTiers.length > 0 && (
                 <span className="mt-1 block text-xs text-ink-soft">
-                  The exact fee depends on which option applies ({st.feeTiers.map((t) => t.label).join(" / ")}) — the
+                  The exact fee depends on which option applies ({st.feeTiers.map((t) => t.label).join(" / ")}). The
                   officer reviewing your application sets it, not you.
                 </span>
               )}

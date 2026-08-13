@@ -19,8 +19,8 @@ export default async function AccountabilityPage() {
         <h1 className="mt-2 font-display text-3xl font-semibold text-ink">How fast is the Assembly, really?</h1>
         <p className="mt-3 text-sm text-ink-soft">
           Every permit application gets an SLA deadline the moment it&apos;s submitted. This page shows, in
-          aggregate and without any personal data, how each service is actually performing against that promise —
-          no account needed.
+          aggregate and without any personal data, how each service is actually performing against that promise.
+          No account needed.
         </p>
       </div>
 
