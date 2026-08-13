@@ -4,6 +4,7 @@ import { getSession } from "@/lib/auth";
 import { isOverdue, isTerminalStatus, NEXT_STATUSES, REQUEST_STATUSES, STATUS_LABELS, type RequestStatus } from "@/lib/sla";
 import { StatusBadge, OverdueBadge } from "@/components/status-badge";
 import { UpdateStatusForm } from "@/components/officer/update-status-form";
+import { formatFee } from "@/lib/format";
 
 export default async function OfficerQueuePage({ searchParams }: PageProps<"/officer/queue">) {
   const session = await getSession();
@@ -72,7 +73,8 @@ export default async function OfficerQueuePage({ searchParams }: PageProps<"/off
                     <p className="text-sm font-semibold text-ink">{r.citizen.name}</p>
                     <p className="mt-0.5 text-xs text-ink-soft">
                       Submitted {r.submittedAt.toLocaleDateString()} &middot; SLA deadline{" "}
-                      {r.slaDeadline.toLocaleDateString()}
+                      {r.slaDeadline.toLocaleDateString()} &middot; Fee {formatFee(r.feeGhs)}
+                      {r.sizeTier && ` (${r.sizeTier})`}
                     </p>
                     <p className="mt-2 max-w-lg text-sm text-ink">{r.applicantNote}</p>
                     {r.attachments.length > 0 && (

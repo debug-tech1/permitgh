@@ -73,7 +73,10 @@ export default async function ApprovalConfirmationPage({ params }: PageProps<"/c
           </div>
           <div>
             <dt className="text-xs tracking-wide text-ink-soft uppercase">Fee</dt>
-            <dd className="mt-1 font-medium text-ink">{formatFee(request.feeGhs)}</dd>
+            <dd className="mt-1 font-medium text-ink">
+              {formatFee(request.feeGhs)}
+              {request.sizeTier && <span className="text-ink-soft"> ({request.sizeTier})</span>}
+            </dd>
           </div>
         </dl>
 

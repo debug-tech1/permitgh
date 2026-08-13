@@ -18,6 +18,7 @@ export const submitRequestSchema = z.object({
     .trim()
     .min(10, "Describe your request in at least 10 characters")
     .max(2000, "Keep it under 2000 characters"),
+  sizeTier: z.string().trim().max(60).optional(),
 });
 
 export const updateStatusSchema = z.object({

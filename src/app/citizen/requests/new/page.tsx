@@ -1,8 +1,13 @@
 import { prisma } from "@/lib/db";
 import { SubmitRequestForm } from "@/components/citizen/submit-request-form";
+import { parseFeeTiers } from "@/lib/fees";
 
 export default async function NewRequestPage() {
   const serviceTypes = await prisma.serviceType.findMany({ orderBy: { name: "asc" } });
+  const serviceTypeOptions = serviceTypes.map((st) => ({
+    ...st,
+    feeTiers: parseFeeTiers(st.feeTiers),
+  }));
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -11,7 +16,7 @@ export default async function NewRequestPage() {
         Choose the service you need — your SLA deadline is set the moment you submit.
       </p>
       <div className="mt-6 border border-line bg-paper-raised p-6">
-        <SubmitRequestForm serviceTypes={serviceTypes} />
+        <SubmitRequestForm serviceTypes={serviceTypeOptions} />
       </div>
     </div>
   );

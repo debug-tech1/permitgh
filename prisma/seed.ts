@@ -50,6 +50,11 @@ async function main() {
       slug: "building-permit",
       slaDays: 21,
       feeGhs: 800,
+      feeTiers: [
+        { label: "1 storey", feeGhs: 800 },
+        { label: "2 storeys", feeGhs: 1400 },
+        { label: "3+ storeys", feeGhs: 2200 },
+      ],
       description:
         "Approval to construct or substantially renovate a building within the Assembly's jurisdiction.",
       requiredDocuments: [

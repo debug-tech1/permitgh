@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
 import { MAX_ATTACHMENTS, MAX_ATTACHMENT_BYTES, submitRequestSchema } from "@/lib/validation";
 import { computeSlaDeadline } from "@/lib/sla";
+import { findFeeTier, parseFeeTiers } from "@/lib/fees";
 
 export type ActionState = { error?: string } | undefined;
 
@@ -15,6 +16,7 @@ export async function submitRequest(_prevState: ActionState, formData: FormData)
   const parsed = submitRequestSchema.safeParse({
     serviceTypeId: formData.get("serviceTypeId"),
     applicantNote: formData.get("applicantNote"),
+    sizeTier: formData.get("sizeTier") || undefined,
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Check your details and try again." };
@@ -23,6 +25,21 @@ export async function submitRequest(_prevState: ActionState, formData: FormData)
   const serviceType = await prisma.serviceType.findUnique({ where: { id: parsed.data.serviceTypeId } });
   if (!serviceType) {
     return { error: "Choose a valid service type." };
+  }
+
+  // If the service has size-based pricing, the citizen must pick a valid
+  // tier — the fee snapshot below depends on it. Flat-fee services ignore
+  // whatever (if anything) was submitted here.
+  const tiers = parseFeeTiers(serviceType.feeTiers);
+  let feeGhs = serviceType.feeGhs;
+  let sizeTier: string | null = null;
+  if (tiers.length > 0) {
+    const tier = findFeeTier(tiers, parsed.data.sizeTier);
+    if (!tier) {
+      return { error: "Choose a size to see the correct fee." };
+    }
+    feeGhs = tier.feeGhs;
+    sizeTier = tier.label;
   }
 
   // Validate every attachment before writing anything, so a rejected upload
@@ -54,7 +71,8 @@ export async function submitRequest(_prevState: ActionState, formData: FormData)
       applicantNote: parsed.data.applicantNote,
       submittedAt,
       slaDeadline: computeSlaDeadline(submittedAt, serviceType.slaDays),
-      feeGhs: serviceType.feeGhs,
+      feeGhs,
+      sizeTier,
     },
   });
 

@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { submitRequest, type ActionState } from "@/actions/request-actions";
 import { formatFee } from "@/lib/format";
+import type { FeeTier } from "@/lib/fees";
 
 const initialState: ActionState = undefined;
 
@@ -11,6 +12,7 @@ type ServiceTypeOption = {
   name: string;
   slaDays: number;
   feeGhs: number;
+  feeTiers: FeeTier[];
   description: string;
   requiredDocuments: string[];
 };
@@ -32,8 +34,27 @@ export function SubmitRequestForm({ serviceTypes }: { serviceTypes: ServiceTypeO
               <span className="block text-sm font-semibold text-ink">{st.name}</span>
               <span className="block text-xs text-ink-soft">{st.description}</span>
               <span className="mt-1 block text-xs font-medium text-brass">
-                SLA: {st.slaDays} working days &middot; Fee: {formatFee(st.feeGhs)}
+                SLA: {st.slaDays} working days &middot; Fee:{" "}
+                {st.feeTiers.length > 0 ? `from ${formatFee(st.feeTiers[0].feeGhs)}` : formatFee(st.feeGhs)}
               </span>
+              {st.feeTiers.length > 0 && (
+                <span className="mt-2 block text-xs">
+                  <span className="font-medium text-ink">Size (sets the fee):</span>
+                  <span className="mt-1 flex flex-wrap gap-2">
+                    {st.feeTiers.map((tier) => (
+                      <label
+                        key={tier.label}
+                        className="flex cursor-pointer items-center gap-1.5 border border-line bg-paper px-2 py-1 has-[:checked]:border-brass has-[:checked]:bg-brass/10"
+                      >
+                        <input type="radio" name="sizeTier" value={tier.label} className="accent-brass" />
+                        <span className="text-ink-soft">
+                          {tier.label} — <span className="font-medium text-ink">{formatFee(tier.feeGhs)}</span>
+                        </span>
+                      </label>
+                    ))}
+                  </span>
+                </span>
+              )}
               {st.requiredDocuments.length > 0 && (
                 <span className="mt-2 block text-xs text-ink-soft">
                   <span className="font-medium text-ink">You&apos;ll need:</span>
