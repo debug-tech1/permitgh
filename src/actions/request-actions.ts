@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
-import { MAX_ATTACHMENT_BYTES, submitRequestSchema } from "@/lib/validation";
+import { MAX_ATTACHMENTS, MAX_ATTACHMENT_BYTES, submitRequestSchema } from "@/lib/validation";
 import { computeSlaDeadline } from "@/lib/sla";
 
 export type ActionState = { error?: string } | undefined;
@@ -25,20 +25,25 @@ export async function submitRequest(_prevState: ActionState, formData: FormData)
     return { error: "Choose a valid service type." };
   }
 
-  // Validate the attachment before writing anything, so a rejected upload
-  // never leaves behind a request with no file.
-  let attachment: { fileName: string; dataUrl: string } | null = null;
-  const file = formData.get("attachment");
-  if (file instanceof File && file.size > 0) {
-    if (file.size > MAX_ATTACHMENT_BYTES) {
-      return { error: "Attachment is too large — 2MB maximum." };
-    }
-    const buffer = Buffer.from(await file.arrayBuffer());
-    attachment = {
-      fileName: file.name,
-      dataUrl: `data:${file.type || "application/octet-stream"};base64,${buffer.toString("base64")}`,
-    };
+  // Validate every attachment before writing anything, so a rejected upload
+  // never leaves behind a request with only some of its files.
+  const files = formData.getAll("attachments").filter((f): f is File => f instanceof File && f.size > 0);
+  if (files.length > MAX_ATTACHMENTS) {
+    return { error: `Attach at most ${MAX_ATTACHMENTS} files.` };
   }
+  const oversized = files.find((f) => f.size > MAX_ATTACHMENT_BYTES);
+  if (oversized) {
+    return { error: `"${oversized.name}" is too large — 2MB maximum per file.` };
+  }
+  const attachments = await Promise.all(
+    files.map(async (file) => {
+      const buffer = Buffer.from(await file.arrayBuffer());
+      return {
+        fileName: file.name,
+        dataUrl: `data:${file.type || "application/octet-stream"};base64,${buffer.toString("base64")}`,
+      };
+    }),
+  );
 
   const submittedAt = new Date();
   const request = await prisma.serviceRequest.create({
@@ -56,9 +61,9 @@ export async function submitRequest(_prevState: ActionState, formData: FormData)
     data: { requestId: request.id, status: "received", changedById: session.sub, changedAt: submittedAt },
   });
 
-  if (attachment) {
-    await prisma.attachment.create({
-      data: { requestId: request.id, fileName: attachment.fileName, fileUrl: attachment.dataUrl },
+  if (attachments.length > 0) {
+    await prisma.attachment.createMany({
+      data: attachments.map((a) => ({ requestId: request.id, fileName: a.fileName, fileUrl: a.dataUrl })),
     });
   }
 

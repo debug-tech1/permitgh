@@ -30,12 +30,13 @@ model User {
 }
 
 model ServiceType {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  slug        String   @unique
-  slaDays     Int
-  description String
-  createdAt   DateTime @default(now())
+  id                String   @id @default(uuid())
+  name              String   @unique
+  slug              String   @unique
+  slaDays           Int
+  description       String
+  requiredDocuments String[] @default([])
+  createdAt         DateTime @default(now())
 
   requests ServiceRequest[]
   officers User[]

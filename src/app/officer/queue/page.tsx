@@ -20,7 +20,7 @@ export default async function OfficerQueuePage({ searchParams }: PageProps<"/off
         serviceTypeId: session.assignedServiceTypeId,
         ...(statusFilter ? { status: statusFilter } : {}),
       },
-      include: { citizen: true },
+      include: { citizen: true, attachments: true },
       orderBy: { submittedAt: "asc" },
     }),
   ]);
@@ -75,6 +75,32 @@ export default async function OfficerQueuePage({ searchParams }: PageProps<"/off
                       {r.slaDeadline.toLocaleDateString()}
                     </p>
                     <p className="mt-2 max-w-lg text-sm text-ink">{r.applicantNote}</p>
+                    {r.attachments.length > 0 && (
+                      <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                        {r.attachments.map((a) => (
+                          <li key={a.id}>
+                            <a
+                              href={a.fileUrl}
+                              download={a.fileName}
+                              className="inline-flex items-center gap-1 text-xs font-medium text-accent hover:underline"
+                            >
+                              <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                aria-hidden="true"
+                              >
+                                <path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                              {a.fileName}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     {overdue && <OverdueBadge />}

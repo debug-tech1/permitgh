@@ -5,7 +5,13 @@ import { submitRequest, type ActionState } from "@/actions/request-actions";
 
 const initialState: ActionState = undefined;
 
-type ServiceTypeOption = { id: string; name: string; slaDays: number; description: string };
+type ServiceTypeOption = {
+  id: string;
+  name: string;
+  slaDays: number;
+  description: string;
+  requiredDocuments: string[];
+};
 
 export function SubmitRequestForm({ serviceTypes }: { serviceTypes: ServiceTypeOption[] }) {
   const [state, formAction, pending] = useActionState(submitRequest, initialState);
@@ -24,6 +30,16 @@ export function SubmitRequestForm({ serviceTypes }: { serviceTypes: ServiceTypeO
               <span className="block text-sm font-semibold text-ink">{st.name}</span>
               <span className="block text-xs text-ink-soft">{st.description}</span>
               <span className="mt-1 block text-xs font-medium text-brass">SLA: {st.slaDays} working days</span>
+              {st.requiredDocuments.length > 0 && (
+                <span className="mt-2 block text-xs text-ink-soft">
+                  <span className="font-medium text-ink">You&apos;ll need:</span>
+                  <ul className="mt-1 list-disc space-y-0.5 pl-4">
+                    {st.requiredDocuments.map((doc) => (
+                      <li key={doc}>{doc}</li>
+                    ))}
+                  </ul>
+                </span>
+              )}
             </span>
           </label>
         ))}
@@ -42,9 +58,9 @@ export function SubmitRequestForm({ serviceTypes }: { serviceTypes: ServiceTypeO
       </label>
 
       <label className="flex flex-col gap-1 text-sm">
-        <span className="font-medium text-ink">Supporting document (optional)</span>
-        <input type="file" name="attachment" className="text-sm text-ink-soft" />
-        <span className="text-xs text-ink-soft">2MB maximum.</span>
+        <span className="font-medium text-ink">Supporting documents (optional)</span>
+        <input type="file" name="attachments" multiple className="text-sm text-ink-soft" />
+        <span className="text-xs text-ink-soft">Up to 5 files, 2MB maximum each.</span>
       </label>
 
       {state?.error && <p className="text-sm text-status-critical">{state.error}</p>}

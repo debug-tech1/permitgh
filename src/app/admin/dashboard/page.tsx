@@ -1,4 +1,5 @@
 import { computeOfficerWorkload, computeServiceTypeStats } from "@/lib/stats";
+import { ServicePerformancePanel } from "@/components/service-performance-panel";
 
 export default async function AdminDashboardPage() {
   const [serviceStats, officerStats] = await Promise.all([computeServiceTypeStats(), computeOfficerWorkload()]);
@@ -10,43 +11,8 @@ export default async function AdminDashboardPage() {
         The same figures the public dashboard shows, plus officer-level detail.
       </p>
 
-      <div className="mt-6 overflow-x-auto border border-line">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-paper-raised text-xs tracking-wide text-ink-soft uppercase">
-            <tr>
-              <th className="px-4 py-3">Service</th>
-              <th className="px-4 py-3">SLA</th>
-              <th className="px-4 py-3">Open</th>
-              <th className="px-4 py-3">Overdue</th>
-              <th className="px-4 py-3">Resolved</th>
-              <th className="px-4 py-3">Avg. resolution</th>
-              <th className="px-4 py-3">% within SLA</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-line">
-            {serviceStats.map((s) => (
-              <tr key={s.serviceTypeId}>
-                <td className="px-4 py-3 font-medium text-ink">{s.serviceTypeName}</td>
-                <td className="px-4 py-3 text-ink-soft tabular-nums">{s.slaDays}d</td>
-                <td className="px-4 py-3 tabular-nums">{s.openRequests}</td>
-                <td className="px-4 py-3 tabular-nums">
-                  {s.overdueOpenCount > 0 ? (
-                    <span className="font-semibold text-status-critical">{s.overdueOpenCount}</span>
-                  ) : (
-                    s.overdueOpenCount
-                  )}
-                </td>
-                <td className="px-4 py-3 tabular-nums">{s.resolvedCount}</td>
-                <td className="px-4 py-3 tabular-nums">
-                  {s.avgResolutionDays !== null ? `${s.avgResolutionDays}d` : "—"}
-                </td>
-                <td className="px-4 py-3 tabular-nums">
-                  {s.withinSlaPercent !== null ? `${s.withinSlaPercent}%` : "—"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="mt-6">
+        <ServicePerformancePanel stats={serviceStats} idPrefix="admin" />
       </div>
 
       <h2 className="mt-10 text-sm font-semibold text-ink">Officers</h2>

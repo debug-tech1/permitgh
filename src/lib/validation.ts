@@ -31,4 +31,5 @@ export const slaConfigSchema = z.object({
   slaDays: z.coerce.number().int().min(1, "Must be at least 1 day").max(90, "Keep it under 90 days"),
 });
 
-export const MAX_ATTACHMENT_BYTES = 2 * 1024 * 1024; // 2MB — see technical debt log
+export const MAX_ATTACHMENT_BYTES = 2 * 1024 * 1024; // 2MB per file — see technical debt log
+export const MAX_ATTACHMENTS = 5; // per request

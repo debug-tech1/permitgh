@@ -34,6 +34,12 @@ async function main() {
       slaDays: 5,
       description:
         "Annual renewal of a business's permit to legally operate within the Assembly's jurisdiction.",
+      requiredDocuments: [
+        "Valid Ghana Card (National ID)",
+        "Tax Clearance Certificate",
+        "Proof of business premises (tenancy agreement or property document)",
+        "Previous permit, if renewing",
+      ],
     },
   });
 
@@ -44,6 +50,12 @@ async function main() {
       slaDays: 21,
       description:
         "Approval to construct or substantially renovate a building within the Assembly's jurisdiction.",
+      requiredDocuments: [
+        "Site plan or architectural drawings",
+        "Proof of land ownership or lease agreement",
+        "Valid Ghana Card (National ID)",
+        "Structural engineer's report, for multi-storey buildings",
+      ],
     },
   });
 
@@ -54,6 +66,11 @@ async function main() {
       slaDays: 7,
       description:
         "Allocation or renewal of a licensed trading stall in an Assembly-managed market.",
+      requiredDocuments: [
+        "Valid Ghana Card (National ID)",
+        "Passport-sized photograph",
+        "Previous stall permit, if renewing",
+      ],
     },
   });
 
