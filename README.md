@@ -1,4 +1,4 @@
-# ServeTrack
+# PermitGH
 
 Municipal Assembly Service Request & SLA Accountability Tracker — a CSCD602
 Advanced Software Engineering capstone project.
@@ -42,12 +42,13 @@ Password for all accounts: `Password123!`
 
 | Role    | Email                              | Notes                        |
 | ------- | ----------------------------------- | ----------------------------- |
-| Admin   | `admin@servetrack.test`             | SLA config + performance view |
-| Officer | `officer.business@servetrack.test`  | Business Operating Permit queue |
-| Officer | `officer.building@servetrack.test`  | Building Permit queue |
-| Officer | `officer.market@servetrack.test`    | Market Stall Permit queue |
-| Citizen | `citizen@servetrack.test`           | Ama Serwaa — has sample requests |
-| Citizen | `citizen2@servetrack.test`          | Kwame Owusu — has a sample request |
+| Admin   | `admin@permitgh.test`               | SLA config + performance view |
+| Officer | `officer.business@permitgh.test`    | Business Operating Permit queue |
+| Officer | `officer.building@permitgh.test`    | Building Permit queue |
+| Officer | `officer.market@permitgh.test`      | Market Stall Permit queue |
+| Officer | `officer.property@permitgh.test`    | Property Rate queue |
+| Citizen | `citizen@permitgh.test`             | Ama Serwaa — has sample requests |
+| Citizen | `citizen2@permitgh.test`            | Kwame Owusu — has a sample request |
 
 New citizens can also self-register at `/register`. Officer and admin
 accounts are seeded/issued directly, matching how Assembly staff accounts
@@ -67,7 +68,7 @@ unit suite.
 
 ## Live deployment
 
-- **App:** https://servetrack-theta.vercel.app
+- **App:** https://servetrack-theta.vercel.app (URL unchanged since the ServeTrack -> PermitGH rename — renaming the Vercel project itself would break this already-shared link; the app displays "PermitGH" everywhere, only the deployment's URL slug is the old name)
 - **Hosting:** Vercel (project `debug-tech/servetrack`)
 - **Database:** Neon Postgres, provisioned via Vercel Storage and linked to the project (`DATABASE_URL` is injected automatically, not stored in this repo)
 - Demo data was seeded once, as part of the first production build. `npm run build` no longer runs the seed step (see below), so later redeploys apply pending migrations but never reset data. To reseed on purpose, temporarily add `&& prisma db seed` back into the `build` script in `package.json` and redeploy.

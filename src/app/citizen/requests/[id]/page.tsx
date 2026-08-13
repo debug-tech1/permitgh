@@ -58,7 +58,7 @@ export default async function RequestDetailPage({ params }: PageProps<"/citizen/
             Billed: {request.billingDetail ?? formatFee(request.feeGhs)}
           </p>
           <p className="mt-1 text-xs text-ink-soft">
-            Arrange payment with the Assembly through their existing channels — ServeTrack doesn&apos;t collect
+            Arrange payment with the Assembly through their existing channels — PermitGH doesn&apos;t collect
             payment. Your officer can move this request toward approval once payment is confirmed.
           </p>
         </div>

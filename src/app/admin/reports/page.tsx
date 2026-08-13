@@ -69,7 +69,7 @@ export default async function AdminReportsPage({ searchParams }: PageProps<"/adm
       </form>
 
       <div className="mt-8">
-        <p className="font-display text-lg font-semibold text-ink">ServeTrack — Operations Report</p>
+        <p className="font-display text-lg font-semibold text-ink">PermitGH — Operations Report</p>
         <p className="text-xs text-ink-soft">
           {from ? from.toLocaleDateString() : "Start"} – {to ? to.toLocaleDateString() : "Present"} &middot;
           Generated {new Date().toLocaleString()}

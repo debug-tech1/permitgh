@@ -123,7 +123,7 @@ export default async function AdminDashboardPage() {
         </div>
         <div className="text-right text-xs text-[var(--console-ink-soft)]">
           <p>Last updated {new Date().toLocaleString()}</p>
-          <p>ServeTrack — Municipal Assembly</p>
+          <p>PermitGH — Municipal Assembly</p>
         </div>
       </div>
 
@@ -247,7 +247,7 @@ export default async function AdminDashboardPage() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="mt-1 h-1.5 w-1.5 flex-none rounded-full bg-emerald-600" />
-                ServeTrack platform operational
+                PermitGH platform operational
               </li>
             </ul>
           </div>

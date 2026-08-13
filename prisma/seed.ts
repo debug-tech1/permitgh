@@ -17,7 +17,7 @@ const daysAgo = (n: number) => {
 };
 
 async function main() {
-  console.log("Seeding ServeTrack demo data...");
+  console.log("Seeding PermitGH demo data...");
 
   await prisma.attachment.deleteMany();
   await prisma.statusHistory.deleteMany();
@@ -110,7 +110,7 @@ async function main() {
   await prisma.user.create({
     data: {
       name: "Assembly Admin",
-      email: "admin@servetrack.test",
+      email: "admin@permitgh.test",
       passwordHash,
       role: "admin",
     },
@@ -119,7 +119,7 @@ async function main() {
   const officerBusiness = await prisma.user.create({
     data: {
       name: "Officer Adjei",
-      email: "officer.business@servetrack.test",
+      email: "officer.business@permitgh.test",
       passwordHash,
       role: "officer",
       assignedServiceTypeId: businessPermit.id,
@@ -129,7 +129,7 @@ async function main() {
   const officerBuilding = await prisma.user.create({
     data: {
       name: "Officer Boateng",
-      email: "officer.building@servetrack.test",
+      email: "officer.building@permitgh.test",
       passwordHash,
       role: "officer",
       assignedServiceTypeId: buildingPermit.id,
@@ -139,7 +139,7 @@ async function main() {
   const officerMarket = await prisma.user.create({
     data: {
       name: "Officer Mensah",
-      email: "officer.market@servetrack.test",
+      email: "officer.market@permitgh.test",
       passwordHash,
       role: "officer",
       assignedServiceTypeId: marketStallPermit.id,
@@ -149,7 +149,7 @@ async function main() {
   await prisma.user.create({
     data: {
       name: "Officer Asante",
-      email: "officer.property@servetrack.test",
+      email: "officer.property@permitgh.test",
       passwordHash,
       role: "officer",
       assignedServiceTypeId: propertyRate.id,
@@ -159,7 +159,7 @@ async function main() {
   const citizenAma = await prisma.user.create({
     data: {
       name: "Ama Serwaa",
-      email: "citizen@servetrack.test",
+      email: "citizen@permitgh.test",
       passwordHash,
       role: "citizen",
       phone: "024 555 1234",
@@ -170,7 +170,7 @@ async function main() {
   const citizenKwame = await prisma.user.create({
     data: {
       name: "Kwame Owusu",
-      email: "citizen2@servetrack.test",
+      email: "citizen2@permitgh.test",
       passwordHash,
       role: "citizen",
       phone: "020 777 5678",
@@ -358,13 +358,13 @@ async function main() {
   console.log("Seed complete.");
   console.log("");
   console.log("Login credentials (password for all: Password123!):");
-  console.log("  Admin:    admin@servetrack.test");
-  console.log("  Officer:  officer.business@servetrack.test  (Business Operating Permit)");
-  console.log("  Officer:  officer.building@servetrack.test  (Building Permit)");
-  console.log("  Officer:  officer.market@servetrack.test    (Market Stall Permit)");
-  console.log("  Officer:  officer.property@servetrack.test  (Property Rate)");
-  console.log("  Citizen:  citizen@servetrack.test            (Ama Serwaa)");
-  console.log("  Citizen:  citizen2@servetrack.test           (Kwame Owusu)");
+  console.log("  Admin:    admin@permitgh.test");
+  console.log("  Officer:  officer.business@permitgh.test  (Business Operating Permit)");
+  console.log("  Officer:  officer.building@permitgh.test  (Building Permit)");
+  console.log("  Officer:  officer.market@permitgh.test    (Market Stall Permit)");
+  console.log("  Officer:  officer.property@permitgh.test  (Property Rate)");
+  console.log("  Citizen:  citizen@permitgh.test            (Ama Serwaa)");
+  console.log("  Citizen:  citizen2@permitgh.test           (Kwame Owusu)");
 }
 
 main()

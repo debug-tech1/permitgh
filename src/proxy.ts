@@ -6,7 +6,7 @@ import { jwtVerify } from "jose";
 // or wrong-role visitors before a protected page ever renders. This is not the
 // only check — every Server Action re-verifies the session independently,
 // because Server Functions bypass proxy matchers entirely (see lib/auth.ts).
-const SESSION_COOKIE = "servetrack_session";
+const SESSION_COOKIE = "permitgh_session";
 
 const ROLE_PREFIXES: Record<string, string> = {
   "/citizen": "citizen",

@@ -44,7 +44,7 @@ export async function updateRequestStatus(_prevState: ActionState, formData: For
   }
   // Approval requires the request to have been billed AND paid — cost is
   // always an officer's call (see billBuildingPermit/assessFee below), and
-  // ServeTrack doesn't process payment itself, so a human has to confirm it
+  // PermitGH doesn't process payment itself, so a human has to confirm it
   // happened (see confirmPayment below) before a permit can be granted.
   if (parsed.data.status === "approved") {
     if (request.feeGhs === null) {
@@ -197,7 +197,7 @@ export async function billBuildingPermit(_prevState: ActionState, formData: Form
   revalidatePath("/");
 }
 
-// ServeTrack never processes payment itself (see confirmation-page
+// PermitGH never processes payment itself (see confirmation-page
 // disclaimers) — this just records that the officer confirmed it happened
 // through the Assembly's existing channels. Required before approval.
 export async function confirmPayment(_prevState: ActionState, formData: FormData): Promise<ActionState> {

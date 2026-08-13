@@ -32,7 +32,7 @@ export async function updateServiceTypeConfig(_prevState: ActionState, formData:
   revalidatePath("/");
 }
 
-// ServeTrack has no email integration (a deliberate, documented gap — see
+// PermitGH has no email integration (a deliberate, documented gap — see
 // README), so there's no self-service "forgot password" link to send.
 // Instead an admin generates a fresh temporary password here, shown once,
 // which they relay to the user through the Assembly's own channels.

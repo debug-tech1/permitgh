@@ -51,7 +51,7 @@ export async function NavBar() {
     <header className="sticky top-0 z-10 border-b border-line bg-paper/95 backdrop-blur-sm">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-4">
         <Link href="/" className="font-display text-lg font-semibold text-ink">
-          ServeTrack
+          PermitGH
         </Link>
         <nav className="flex flex-wrap items-center gap-5 text-sm">
           {session &&

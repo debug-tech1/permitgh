@@ -39,7 +39,7 @@ export default async function ApprovalConfirmationPage({ params }: PageProps<"/c
       <div className="border-2 border-ink p-8">
         <div className="flex items-start justify-between border-b border-line pb-6">
           <div>
-            <p className="font-display text-lg font-semibold text-ink">ServeTrack</p>
+            <p className="font-display text-lg font-semibold text-ink">PermitGH</p>
             <p className="text-xs tracking-wide text-brass uppercase">Approval Confirmation</p>
           </div>
           <div className="text-right">
@@ -97,10 +97,10 @@ export default async function ApprovalConfirmationPage({ params }: PageProps<"/c
         )}
 
         <p className="mt-8 border-t border-line pt-4 text-xs text-ink-soft">
-          This is a system-generated confirmation of an approval recorded in ServeTrack on{" "}
+          This is a system-generated confirmation of an approval recorded in PermitGH on{" "}
           {(approval?.changedAt ?? new Date()).toLocaleString()}. It is not a legally binding permit certificate —
           contact the Assembly directly to verify or obtain an official document. The fee shown is informational;
-          ServeTrack does not collect payment — pay through the Assembly&apos;s existing payment channels.
+          PermitGH does not collect payment — pay through the Assembly&apos;s existing payment channels.
         </p>
       </div>
 

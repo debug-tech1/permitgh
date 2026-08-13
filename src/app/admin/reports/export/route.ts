@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
   return new NextResponse(lines.join("\n"), {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": 'attachment; filename="servetrack-requests.csv"',
+      "Content-Disposition": 'attachment; filename="permitgh-requests.csv"',
     },
   });
 }

@@ -4,7 +4,7 @@ import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
 import { randomInt } from "node:crypto";
 
-const SESSION_COOKIE = "servetrack_session";
+const SESSION_COOKIE = "permitgh_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 days
 
 export type Role = "citizen" | "officer" | "admin";
