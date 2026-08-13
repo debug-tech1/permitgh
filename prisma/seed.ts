@@ -3,11 +3,11 @@
 // public dashboard (FIG. "Public Accountability Dashboard") and officer
 // queue have something real to show without manual clicking.
 import { PrismaClient } from "../src/generated/prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import { computeSlaDeadline } from "../src/lib/sla";
 
-const adapter = new PrismaBetterSqlite3({ url: process.env.DATABASE_URL ?? "file:./dev.db" });
+const adapter = new PrismaPg(process.env.DATABASE_URL ?? "");
 const prisma = new PrismaClient({ adapter });
 
 const daysAgo = (n: number) => {

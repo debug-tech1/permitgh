@@ -1,14 +1,11 @@
 import { PrismaClient } from "@/generated/prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-// Local dev runs on SQLite via this adapter. Swapping to PostgreSQL for
-// deployment means: change schema.prisma's datasource provider to
-// "postgresql", install @prisma/adapter-pg, and replace the adapter below
-// with `new PrismaPg({ connectionString: process.env.DATABASE_URL })`.
-// The schema itself needs no changes — see prisma/schema.prisma header.
-const adapter = new PrismaBetterSqlite3({
-  url: process.env.DATABASE_URL ?? "file:./dev.db",
-});
+// Production runs on PostgreSQL (provisioned via Vercel Storage — see
+// README). Local dev ran on SQLite through the same generic Prisma-client
+// API during earlier phases; this is the one-line-adapter swap that
+// migration was designed for. See prisma/schema.prisma's datasource line.
+const adapter = new PrismaPg(process.env.DATABASE_URL ?? "");
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 

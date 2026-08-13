@@ -1,7 +1,8 @@
 // ServeTrack data model — see FIG. 3 (Entity-Relationship Diagram) in the
 // published system design doc for the illustrative version of this schema.
-// Deliberately avoids Prisma enums so the same schema works unchanged on
-// SQLite (local dev) and PostgreSQL (production) — a one-line datasource swap.
+// Deliberately avoids Prisma enums so the same schema worked unchanged on
+// SQLite during local dev and now on PostgreSQL in production — the only
+// change needed was this provider line and the driver adapter in db.ts.
 
 generator client {
   provider = "prisma-client"
@@ -9,7 +10,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model User {
