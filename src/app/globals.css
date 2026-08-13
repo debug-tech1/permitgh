@@ -58,6 +58,19 @@ body {
   color: var(--paper);
 }
 
+/* Ops-console palette — deliberately dark-only, scoped to the admin
+   performance dashboard. A command-center screen meant to be watched, not
+   read like a document, so it doesn't follow the civic-ledger light/dark
+   system the rest of the app uses. Contained to .ops-console on purpose. */
+.ops-console {
+  --console-bg: #0b0f17;
+  --console-card: #121826;
+  --console-border: #1e2635;
+  --console-ink: #e8ecf3;
+  --console-ink-soft: #8b93a7;
+  --console-gold: #f0b429;
+}
+
 @media print {
   header,
   footer,
