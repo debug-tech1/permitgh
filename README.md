@@ -65,10 +65,20 @@ npm run build   # also runs the TypeScript compiler
 and manual UAT-style pass-throughs of every role's flow in addition to this
 unit suite.
 
+## Live deployment
+
+- **App:** https://servetrack-theta.vercel.app
+- **Hosting:** Vercel (project `debug-tech/servetrack`)
+- **Database:** Neon Postgres, provisioned via Vercel Storage and linked to the project (`DATABASE_URL` is injected automatically, not stored in this repo)
+- Demo data was seeded once, as part of the first production build. `npm run build` no longer runs the seed step (see below), so later redeploys apply pending migrations but never reset data. To reseed on purpose, temporarily add `&& prisma db seed` back into the `build` script in `package.json` and redeploy.
+
 ## Deploying (SQLite → PostgreSQL)
 
-Local dev intentionally uses SQLite so the project needs zero external
-signups to run. Production needs a real Postgres instance because the
+This is the migration that was actually carried out to reach the live
+deployment above — kept here as the runbook for standing up another
+environment (e.g. staging) from scratch. Local dev during earlier phases
+intentionally used SQLite so the project needed zero external signups to
+build against; production needs a real Postgres instance because the
 dashboards and SLA clock must survive across serverless invocations —
 SQLite's file can't do that on Vercel. To switch:
 
