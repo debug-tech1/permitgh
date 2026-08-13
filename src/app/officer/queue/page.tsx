@@ -5,6 +5,8 @@ import { isOverdue, isTerminalStatus, NEXT_STATUSES, REQUEST_STATUSES, STATUS_LA
 import { StatusBadge, OverdueBadge } from "@/components/status-badge";
 import { UpdateStatusForm } from "@/components/officer/update-status-form";
 import { AssessFeeForm } from "@/components/officer/assess-fee-form";
+import { BillBuildingPermitForm } from "@/components/officer/bill-building-permit-form";
+import { ConfirmPaymentForm } from "@/components/officer/confirm-payment-form";
 import { formatFee } from "@/lib/format";
 import { parseFeeTiers } from "@/lib/fees";
 
@@ -31,6 +33,7 @@ export default async function OfficerQueuePage({ searchParams }: PageProps<"/off
   const now = new Date();
   const visible = overdueOnly ? requests.filter((r) => isOverdue(now, r.slaDeadline, r.status)) : requests;
   const tiers = parseFeeTiers(serviceType?.feeTiers);
+  const isBuildingPermit = serviceType?.slug === "building-permit";
 
   return (
     <div>
@@ -69,6 +72,8 @@ export default async function OfficerQueuePage({ searchParams }: PageProps<"/off
         <ul className="mt-6 space-y-3">
           {visible.map((r) => {
             const overdue = isOverdue(now, r.slaDeadline, r.status);
+            const needsBilling = r.feeGhs === null;
+            const needsPayment = r.feeGhs !== null && r.paidAt === null;
             return (
               <li key={r.id} className="border border-line bg-paper-raised p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
@@ -76,14 +81,20 @@ export default async function OfficerQueuePage({ searchParams }: PageProps<"/off
                     <p className="text-sm font-semibold text-ink">{r.citizen.name}</p>
                     <p className="mt-0.5 text-xs text-ink-soft">
                       Submitted {r.submittedAt.toLocaleDateString()} &middot; SLA deadline{" "}
-                      {r.slaDeadline.toLocaleDateString()} &middot; Fee{" "}
+                      {r.slaDeadline.toLocaleDateString()}
+                    </p>
+                    <p className="mt-1 text-xs">
                       {r.feeGhs !== null ? (
-                        <>
-                          {formatFee(r.feeGhs)}
-                          {r.sizeTier && ` (${r.sizeTier})`}
-                        </>
+                        <span className="text-ink-soft">
+                          {r.billingDetail ?? formatFee(r.feeGhs)} &middot;{" "}
+                          {r.paidAt ? (
+                            <span className="font-medium text-status-ok">Paid {r.paidAt.toLocaleDateString()}</span>
+                          ) : (
+                            <span className="font-medium text-status-warn">Awaiting payment</span>
+                          )}
+                        </span>
                       ) : (
-                        <span className="font-medium text-brass">pending assessment</span>
+                        <span className="font-medium text-brass">Not yet billed</span>
                       )}
                     </p>
                     <p className="mt-2 max-w-lg text-sm text-ink">{r.applicantNote}</p>
@@ -121,7 +132,11 @@ export default async function OfficerQueuePage({ searchParams }: PageProps<"/off
                 </div>
                 {!isTerminalStatus(r.status) && (
                   <div className="mt-4 space-y-3 border-t border-line pt-4">
-                    {r.feeGhs === null && tiers.length > 0 && <AssessFeeForm requestId={r.id} tiers={tiers} />}
+                    {needsBilling && isBuildingPermit && <BillBuildingPermitForm requestId={r.id} />}
+                    {needsBilling && !isBuildingPermit && tiers.length > 0 && (
+                      <AssessFeeForm requestId={r.id} tiers={tiers} />
+                    )}
+                    {needsPayment && <ConfirmPaymentForm requestId={r.id} />}
                     <UpdateStatusForm requestId={r.id} nextStatuses={NEXT_STATUSES[r.status as RequestStatus] ?? []} />
                   </div>
                 )}

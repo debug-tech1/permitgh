@@ -32,7 +32,15 @@ async function main() {
       name: "Business Operating Permit",
       slug: "business-operating-permit",
       slaDays: 5,
-      feeGhs: 250,
+      feeGhs: 200, // "from" price shown before billing — lowest category
+      feeTiers: [
+        { label: "Retail / Trading", feeGhs: 200 },
+        { label: "Food & Beverage / Restaurant", feeGhs: 350 },
+        { label: "Professional Services", feeGhs: 300 },
+        { label: "Wholesale / Distribution", feeGhs: 450 },
+        { label: "Manufacturing / Industrial", feeGhs: 600 },
+        { label: "Financial Services", feeGhs: 800 },
+      ],
       description:
         "Annual renewal of a business's permit to legally operate within the Assembly's jurisdiction.",
       requiredDocuments: [
@@ -44,17 +52,13 @@ async function main() {
     },
   });
 
+  // No feeGhs/feeTiers here — cost is rate x area + processing, computed by
+  // the billing officer (see actions/officer-actions.ts#billBuildingPermit).
   const buildingPermit = await prisma.serviceType.create({
     data: {
       name: "Building Permit",
       slug: "building-permit",
       slaDays: 21,
-      feeGhs: 800,
-      feeTiers: [
-        { label: "1 storey", feeGhs: 800 },
-        { label: "2 storeys", feeGhs: 1400 },
-        { label: "3+ storeys", feeGhs: 2200 },
-      ],
       description:
         "Approval to construct or substantially renovate a building within the Assembly's jurisdiction.",
       requiredDocuments: [
@@ -82,6 +86,27 @@ async function main() {
     },
   });
 
+  const propertyRate = await prisma.serviceType.create({
+    data: {
+      name: "Property Rate",
+      slug: "property-rate",
+      slaDays: 10,
+      feeGhs: 150, // "from" price — lowest category
+      feeTiers: [
+        { label: "Residential — Owner-occupied", feeGhs: 150 },
+        { label: "Residential — Rented / Investment", feeGhs: 300 },
+        { label: "Commercial — Business use", feeGhs: 600 },
+        { label: "Industrial — Business use", feeGhs: 900 },
+      ],
+      description: "Annual property rate assessment, based on the property's type and purpose of use.",
+      requiredDocuments: [
+        "Valid Ghana Card (National ID)",
+        "Proof of property ownership (title deed or indenture)",
+        "Previous property rate receipt, if renewing",
+      ],
+    },
+  });
+
   await prisma.user.create({
     data: {
       name: "Assembly Admin",
@@ -101,7 +126,7 @@ async function main() {
     },
   });
 
-  await prisma.user.create({
+  const officerBuilding = await prisma.user.create({
     data: {
       name: "Officer Boateng",
       email: "officer.building@servetrack.test",
@@ -118,6 +143,16 @@ async function main() {
       passwordHash,
       role: "officer",
       assignedServiceTypeId: marketStallPermit.id,
+    },
+  });
+
+  await prisma.user.create({
+    data: {
+      name: "Officer Asante",
+      email: "officer.property@servetrack.test",
+      passwordHash,
+      role: "officer",
+      assignedServiceTypeId: propertyRate.id,
     },
   });
 
@@ -192,6 +227,9 @@ async function main() {
       submittedAt: submittedAt3,
       slaDeadline: computeSlaDeadline(submittedAt3, marketStallPermit.slaDays),
       resolvedAt: resolvedAt3,
+      feeGhs: marketStallPermit.feeGhs,
+      billingDetail: `Flat fee: GH₵${marketStallPermit.feeGhs}`,
+      paidAt: resolvedAt3,
     },
   });
   await prisma.statusHistory.createMany({
@@ -225,6 +263,10 @@ async function main() {
       submittedAt: submittedAt4,
       slaDeadline: computeSlaDeadline(submittedAt4, businessPermit.slaDays),
       resolvedAt: resolvedAt4,
+      sizeTier: "Retail / Trading",
+      feeGhs: 200,
+      billingDetail: "Retail / Trading: GH₵200",
+      // Rejected before payment was ever collected — paidAt stays null.
     },
   });
   await prisma.statusHistory.createMany({
@@ -260,6 +302,49 @@ async function main() {
     ],
   });
 
+  // 5. Billed but not yet paid (Building Permit, formula-billed, submitted 6 days ago)
+  const submittedAt5 = daysAgo(6);
+  const req5 = await prisma.serviceRequest.create({
+    data: {
+      citizenId: citizenKwame.id,
+      serviceTypeId: buildingPermit.id,
+      status: "under_review",
+      applicantNote: "New two-storey residential building on a 120 sqm plot, Adenta.",
+      submittedAt: submittedAt5,
+      slaDeadline: computeSlaDeadline(submittedAt5, buildingPermit.slaDays),
+      feeGhs: 1590,
+      billingDetail: "Residential: 120m² × GH₵12/m² = GH₵1,440 + Processing GH₵150 = GH₵1,590",
+    },
+  });
+  await prisma.statusHistory.createMany({
+    data: [
+      { requestId: req5.id, status: "received", changedById: citizenKwame.id, changedAt: submittedAt5 },
+      {
+        requestId: req5.id,
+        status: "under_review",
+        remark: "Site plan reviewed and billed. Awaiting payment before approval.",
+        changedById: officerBuilding.id,
+        changedAt: daysAgo(4),
+      },
+    ],
+  });
+
+  // 6. Fresh, unbilled (Property Rate, submitted today)
+  const submittedAt6 = new Date();
+  const req6 = await prisma.serviceRequest.create({
+    data: {
+      citizenId: citizenAma.id,
+      serviceTypeId: propertyRate.id,
+      status: "received",
+      applicantNote: "Annual rate assessment for my rented-out residential property on Spintex Road.",
+      submittedAt: submittedAt6,
+      slaDeadline: computeSlaDeadline(submittedAt6, propertyRate.slaDays),
+    },
+  });
+  await prisma.statusHistory.create({
+    data: { requestId: req6.id, status: "received", changedById: citizenAma.id, changedAt: submittedAt6 },
+  });
+
   console.log("Seed complete.");
   console.log("");
   console.log("Login credentials (password for all: Password123!):");
@@ -267,6 +352,7 @@ async function main() {
   console.log("  Officer:  officer.business@servetrack.test  (Business Operating Permit)");
   console.log("  Officer:  officer.building@servetrack.test  (Building Permit)");
   console.log("  Officer:  officer.market@servetrack.test    (Market Stall Permit)");
+  console.log("  Officer:  officer.property@servetrack.test  (Property Rate)");
   console.log("  Citizen:  citizen@servetrack.test            (Ama Serwaa)");
   console.log("  Citizen:  citizen2@servetrack.test           (Kwame Owusu)");
 }

@@ -14,7 +14,7 @@ export function AssessFeeForm({ requestId, tiers }: { requestId: string; tiers: 
     <form action={formAction} className="flex flex-wrap items-end gap-3 border border-brass/40 bg-brass/5 p-3">
       <input type="hidden" name="requestId" value={requestId} />
       <label className="flex flex-col gap-1 text-xs">
-        <span className="tracking-wide text-brass uppercase">Assess fee — choose size</span>
+        <span className="tracking-wide text-brass uppercase">Bill this request</span>
         <select name="sizeTier" required defaultValue="" className="border border-line bg-paper px-2 py-1.5 text-sm text-ink">
           <option value="" disabled>
             Choose…
@@ -25,6 +25,20 @@ export function AssessFeeForm({ requestId, tiers }: { requestId: string; tiers: 
             </option>
           ))}
         </select>
+      </label>
+      <label className="flex flex-col gap-1 text-xs">
+        <span className="tracking-wide text-ink-soft uppercase">Waiver GH₵ (optional)</span>
+        <input
+          type="number"
+          name="waiverGhs"
+          min={0}
+          defaultValue={0}
+          className="w-28 border border-line bg-paper px-2 py-1.5 text-sm text-ink"
+        />
+      </label>
+      <label className="flex min-w-[180px] flex-1 flex-col gap-1 text-xs">
+        <span className="tracking-wide text-ink-soft uppercase">Waiver reason (if any)</span>
+        <input type="text" name="waiverReason" className="border border-line bg-paper px-2 py-1.5 text-sm text-ink" />
       </label>
       <button
         type="submit"

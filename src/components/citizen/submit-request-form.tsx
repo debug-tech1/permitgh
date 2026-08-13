@@ -3,12 +3,13 @@
 import { useActionState } from "react";
 import { submitRequest, type ActionState } from "@/actions/request-actions";
 import { formatFee } from "@/lib/format";
-import type { FeeTier } from "@/lib/fees";
+import { BUILDING_PERMIT_RATES, type FeeTier } from "@/lib/fees";
 
 const initialState: ActionState = undefined;
 
 type ServiceTypeOption = {
   id: string;
+  slug: string;
   name: string;
   slaDays: number;
   feeGhs: number;
@@ -24,7 +25,9 @@ export function SubmitRequestForm({ serviceTypes }: { serviceTypes: ServiceTypeO
     <form action={formAction} encType="multipart/form-data" className="flex flex-col gap-5">
       <fieldset className="flex flex-col gap-2">
         <legend className="mb-1 text-sm font-medium text-ink">Service type</legend>
-        {serviceTypes.map((st) => (
+        {serviceTypes.map((st) => {
+          const isBuildingPermit = st.slug === "building-permit";
+          return (
           <label
             key={st.id}
             className="flex cursor-pointer items-start gap-3 border border-line px-3 py-3 has-[:checked]:border-accent has-[:checked]:bg-accent/5"
@@ -35,14 +38,22 @@ export function SubmitRequestForm({ serviceTypes }: { serviceTypes: ServiceTypeO
               <span className="block text-xs text-ink-soft">{st.description}</span>
               <span className="mt-1 block text-xs font-medium text-brass">
                 SLA: {st.slaDays} working days &middot; Fee:{" "}
-                {st.feeTiers.length > 0
-                  ? `${formatFee(st.feeTiers[0].feeGhs)}–${formatFee(st.feeTiers[st.feeTiers.length - 1].feeGhs)}, assessed by the reviewing officer`
-                  : formatFee(st.feeGhs)}
+                {isBuildingPermit
+                  ? `GH₵${BUILDING_PERMIT_RATES.residential.min}–${BUILDING_PERMIT_RATES.commercial.max}/m², assessed by the reviewing officer`
+                  : st.feeTiers.length > 0
+                    ? `${formatFee(st.feeTiers[0].feeGhs)}–${formatFee(st.feeTiers[st.feeTiers.length - 1].feeGhs)}, assessed by the reviewing officer`
+                    : formatFee(st.feeGhs)}
               </span>
-              {st.feeTiers.length > 0 && (
+              {isBuildingPermit && (
                 <span className="mt-1 block text-xs text-ink-soft">
-                  The exact fee depends on the size of what you&apos;re building ({st.feeTiers.map((t) => t.label).join(" / ")}
-                  ) — the officer reviewing your application sets it once they&apos;ve seen your plans, not you.
+                  Cost is rate × floor area, plus a processing charge — the officer sets the exact figure after
+                  reviewing your site plan, not you.
+                </span>
+              )}
+              {!isBuildingPermit && st.feeTiers.length > 0 && (
+                <span className="mt-1 block text-xs text-ink-soft">
+                  The exact fee depends on which option applies ({st.feeTiers.map((t) => t.label).join(" / ")}) — the
+                  officer reviewing your application sets it, not you.
                 </span>
               )}
               {st.requiredDocuments.length > 0 && (
@@ -57,7 +68,8 @@ export function SubmitRequestForm({ serviceTypes }: { serviceTypes: ServiceTypeO
               )}
             </span>
           </label>
-        ))}
+          );
+        })}
       </fieldset>
 
       <label className="flex flex-col gap-1 text-sm">

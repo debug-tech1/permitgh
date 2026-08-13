@@ -53,8 +53,12 @@ model ServiceRequest {
   submittedAt   DateTime  @default(now())
   slaDeadline   DateTime
   resolvedAt    DateTime?
-  feeGhs        Int? // flat-fee services: set at submission. Tiered services: null until an officer assesses it — cost for those is an officer judgment call, not self-reported. Never changes once set, same "never drifts" rule as slaDeadline
-  sizeTier      String? // label of the assessed tier (e.g. "2 storeys"), when the service has feeTiers; null for flat-fee services
+  feeGhs        Int? // flat-fee services: set at submission. Officer-billed services (tiered or formula): null until billed. Never changes once set, same "never drifts" rule as slaDeadline
+  sizeTier      String? // label of the assessed tier/category (e.g. "2 storeys", "Retail / Trading"), for tier-billed services
+  billingDetail String? // human-readable breakdown of how feeGhs was computed — the audit trail a flat number alone can't carry
+  waiverGhs     Int      @default(0) // amount waived by the billing officer, subtracted from the gross fee
+  waiverReason  String? // required (enforced in the action, not the schema) whenever waiverGhs > 0
+  paidAt        DateTime? // set when the billing officer confirms payment happened outside ServeTrack — approval is blocked until this is set
 
   citizen     User            @relation("CitizenRequests", fields: [citizenId], references: [id])
   serviceType ServiceType     @relation(fields: [serviceTypeId], references: [id])

@@ -26,11 +26,44 @@ export const updateStatusSchema = z.object({
   remark: z.string().trim().max(1000).optional().default(""),
 });
 
-// Cost for a tiered service is the officer's call, made from their queue —
-// see actions/officer-actions.ts#assessFee.
-export const assessFeeSchema = z.object({
+const waiverFields = {
+  waiverGhs: z.coerce.number().int().min(0, "Can't be negative").max(1000000).optional().default(0),
+  waiverReason: z.string().trim().max(500).optional(),
+};
+const waiverNeedsReason = (data: { waiverGhs: number; waiverReason?: string }) =>
+  data.waiverGhs === 0 || Boolean(data.waiverReason && data.waiverReason.trim().length > 0);
+const WAIVER_REASON_ISSUE = { message: "Explain the reason for the waiver", path: ["waiverReason"] };
+
+// Cost for a tiered service (business category, property type/purpose) is
+// the officer's call, made from their queue — see actions/officer-actions.ts#assessFee.
+export const assessFeeSchema = z
+  .object({
+    requestId: z.string().min(1),
+    sizeTier: z.string().trim().min(1, "Choose an option"),
+    ...waiverFields,
+  })
+  .refine(waiverNeedsReason, WAIVER_REASON_ISSUE);
+
+// Building Permit's cost is rate x area + processing, computed by the
+// billing officer — see actions/officer-actions.ts#billBuildingPermit and
+// lib/fees.ts for the allowed rate bands per property type.
+export const billBuildingPermitSchema = z
+  .object({
+    requestId: z.string().min(1),
+    propertyType: z.enum(["residential", "commercial"], { message: "Choose a property type" }),
+    areaSqm: z.coerce.number().positive("Enter the building's area in square metres").max(1000000),
+    rate: z.coerce.number().int().positive("Enter a rate"),
+    processingFee: z.coerce.number().int().min(0, "Can't be negative").max(50000),
+    ...waiverFields,
+  })
+  .refine(waiverNeedsReason, WAIVER_REASON_ISSUE);
+
+export const confirmPaymentSchema = z.object({
   requestId: z.string().min(1),
-  sizeTier: z.string().trim().min(1, "Choose a size"),
+});
+
+export const addAttachmentsSchema = z.object({
+  requestId: z.string().min(1),
 });
 
 export const serviceConfigSchema = z.object({

@@ -5,6 +5,7 @@ import { getSession } from "@/lib/auth";
 import { isOverdue, STATUS_LABELS, type RequestStatus } from "@/lib/sla";
 import { formatFee } from "@/lib/format";
 import { StatusBadge, OverdueBadge } from "@/components/status-badge";
+import { AddAttachmentsForm } from "@/components/citizen/add-attachments-form";
 
 export default async function RequestDetailPage({ params }: PageProps<"/citizen/requests/[id]">) {
   const { id } = await params;
@@ -51,6 +52,30 @@ export default async function RequestDetailPage({ params }: PageProps<"/citizen/
         </div>
       )}
 
+      {request.status !== "approved" && request.status !== "rejected" && request.feeGhs !== null && !request.paidAt && (
+        <div className="mt-4 border border-status-warn/40 bg-status-warn/10 px-4 py-3">
+          <p className="text-sm font-medium text-status-warn">
+            Billed: {request.billingDetail ?? formatFee(request.feeGhs)}
+          </p>
+          <p className="mt-1 text-xs text-ink-soft">
+            Arrange payment with the Assembly through their existing channels — ServeTrack doesn&apos;t collect
+            payment. Your officer can move this request toward approval once payment is confirmed.
+          </p>
+        </div>
+      )}
+
+      {request.status === "additional_info_needed" && (
+        <div className="mt-4 border border-status-critical/40 bg-status-critical/10 px-4 py-3">
+          <p className="text-sm font-medium text-status-critical">More information is needed on this request.</p>
+          {request.history.at(-1)?.remark && (
+            <p className="mt-1 text-sm text-ink">{request.history.at(-1)?.remark}</p>
+          )}
+          <p className="mt-1 text-xs text-ink-soft">
+            Review the required documents list below and add whatever&apos;s missing.
+          </p>
+        </div>
+      )}
+
       <dl className="mt-6 grid grid-cols-2 gap-4 border border-line bg-paper-raised p-4 text-sm">
         <div>
           <dt className="text-xs tracking-wide text-ink-soft uppercase">SLA deadline</dt>
@@ -62,16 +87,21 @@ export default async function RequestDetailPage({ params }: PageProps<"/citizen/
             {request.resolvedAt ? request.resolvedAt.toLocaleDateString() : "—"}
           </dd>
         </div>
-        <div>
+        <div className="col-span-2">
           <dt className="text-xs tracking-wide text-ink-soft uppercase">Fee</dt>
           <dd className="mt-1 font-medium text-ink">
             {request.feeGhs !== null ? (
               <>
-                {formatFee(request.feeGhs)}
-                {request.sizeTier && <span className="text-ink-soft"> ({request.sizeTier})</span>}
+                {request.billingDetail ?? formatFee(request.feeGhs)}
+                {" — "}
+                {request.paidAt ? (
+                  <span className="text-status-ok">paid {request.paidAt.toLocaleDateString()}</span>
+                ) : (
+                  <span className="text-status-warn">payment due</span>
+                )}
               </>
             ) : (
-              <span className="text-brass">Pending officer assessment</span>
+              <span className="text-brass">Not yet billed</span>
             )}
           </dd>
         </div>
@@ -81,18 +111,30 @@ export default async function RequestDetailPage({ params }: PageProps<"/citizen/
         </div>
       </dl>
 
-      {request.attachments.length > 0 && (
+      {(request.attachments.length > 0 || request.status === "additional_info_needed") && (
         <div className="mt-6">
           <h2 className="text-sm font-semibold text-ink">Attachments</h2>
-          <ul className="mt-2 space-y-1">
-            {request.attachments.map((a) => (
-              <li key={a.id}>
-                <a href={a.fileUrl} download={a.fileName} className="text-sm text-accent hover:underline">
-                  {a.fileName}
-                </a>
-              </li>
-            ))}
-          </ul>
+          {request.attachments.length > 0 && (
+            <ul className="mt-2 space-y-1">
+              {request.attachments.map((a) => (
+                <li key={a.id}>
+                  <a href={a.fileUrl} download={a.fileName} className="text-sm text-accent hover:underline">
+                    {a.fileName}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+          {request.status === "additional_info_needed" && (
+            <>
+              {request.serviceType.requiredDocuments.length > 0 && (
+                <p className="mt-2 text-xs text-ink-soft">
+                  Required for {request.serviceType.name}: {request.serviceType.requiredDocuments.join(", ")}
+                </p>
+              )}
+              <AddAttachmentsForm requestId={request.id} />
+            </>
+          )}
         </div>
       )}
 
