@@ -54,6 +54,7 @@ export async function submitRequest(_prevState: ActionState, formData: FormData)
       applicantNote: parsed.data.applicantNote,
       submittedAt,
       slaDeadline: computeSlaDeadline(submittedAt, serviceType.slaDays),
+      feeGhs: serviceType.feeGhs,
     },
   });
 

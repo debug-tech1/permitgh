@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
-import { referenceNumber } from "@/lib/format";
+import { formatFee, referenceNumber } from "@/lib/format";
 import { PrintButton } from "@/components/citizen/print-button";
 
 export default async function ApprovalConfirmationPage({ params }: PageProps<"/citizen/requests/[id]/confirmation">) {
@@ -71,6 +71,10 @@ export default async function ApprovalConfirmationPage({ params }: PageProps<"/c
             <dt className="text-xs tracking-wide text-ink-soft uppercase">Issued by</dt>
             <dd className="mt-1 font-medium text-ink">{approval?.changedBy.name ?? "—"}</dd>
           </div>
+          <div>
+            <dt className="text-xs tracking-wide text-ink-soft uppercase">Fee</dt>
+            <dd className="mt-1 font-medium text-ink">{formatFee(request.feeGhs)}</dd>
+          </div>
         </dl>
 
         {approval?.remark && (
@@ -83,7 +87,8 @@ export default async function ApprovalConfirmationPage({ params }: PageProps<"/c
         <p className="mt-8 border-t border-line pt-4 text-xs text-ink-soft">
           This is a system-generated confirmation of an approval recorded in ServeTrack on{" "}
           {(approval?.changedAt ?? new Date()).toLocaleString()}. It is not a legally binding permit certificate —
-          contact the Assembly directly to verify or obtain an official document.
+          contact the Assembly directly to verify or obtain an official document. The fee shown is informational;
+          ServeTrack does not collect payment — pay through the Assembly&apos;s existing payment channels.
         </p>
       </div>
 

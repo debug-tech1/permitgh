@@ -26,9 +26,10 @@ export const updateStatusSchema = z.object({
   remark: z.string().trim().max(1000).optional().default(""),
 });
 
-export const slaConfigSchema = z.object({
+export const serviceConfigSchema = z.object({
   serviceTypeId: z.string().min(1),
   slaDays: z.coerce.number().int().min(1, "Must be at least 1 day").max(90, "Keep it under 90 days"),
+  feeGhs: z.coerce.number().int().min(0, "Can't be negative").max(100000, "Keep it under GH₵100,000"),
 });
 
 export const MAX_ATTACHMENT_BYTES = 2 * 1024 * 1024; // 2MB per file — see technical debt log

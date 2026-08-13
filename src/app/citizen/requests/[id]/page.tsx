@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { isOverdue, STATUS_LABELS, type RequestStatus } from "@/lib/sla";
+import { formatFee } from "@/lib/format";
 import { StatusBadge, OverdueBadge } from "@/components/status-badge";
 
 export default async function RequestDetailPage({ params }: PageProps<"/citizen/requests/[id]">) {
@@ -60,6 +61,10 @@ export default async function RequestDetailPage({ params }: PageProps<"/citizen/
           <dd className="mt-1 font-medium text-ink">
             {request.resolvedAt ? request.resolvedAt.toLocaleDateString() : "—"}
           </dd>
+        </div>
+        <div>
+          <dt className="text-xs tracking-wide text-ink-soft uppercase">Fee</dt>
+          <dd className="mt-1 font-medium text-ink">{formatFee(request.feeGhs)}</dd>
         </div>
         <div className="col-span-2">
           <dt className="text-xs tracking-wide text-ink-soft uppercase">Your note</dt>

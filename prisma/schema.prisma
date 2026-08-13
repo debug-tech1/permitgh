@@ -36,6 +36,7 @@ model ServiceType {
   slaDays           Int
   description       String
   requiredDocuments String[] @default([])
+  feeGhs            Int      @default(0) // whole Ghana Cedis — display only, no payment processing
   createdAt         DateTime @default(now())
 
   requests ServiceRequest[]
@@ -51,6 +52,7 @@ model ServiceRequest {
   submittedAt   DateTime  @default(now())
   slaDeadline   DateTime
   resolvedAt    DateTime?
+  feeGhs        Int       @default(0) // snapshot of ServiceType.feeGhs at submission — same "never drifts" rule as slaDeadline
 
   citizen     User            @relation("CitizenRequests", fields: [citizenId], references: [id])
   serviceType ServiceType     @relation(fields: [serviceTypeId], references: [id])

@@ -32,6 +32,7 @@ async function main() {
       name: "Business Operating Permit",
       slug: "business-operating-permit",
       slaDays: 5,
+      feeGhs: 250,
       description:
         "Annual renewal of a business's permit to legally operate within the Assembly's jurisdiction.",
       requiredDocuments: [
@@ -48,6 +49,7 @@ async function main() {
       name: "Building Permit",
       slug: "building-permit",
       slaDays: 21,
+      feeGhs: 800,
       description:
         "Approval to construct or substantially renovate a building within the Assembly's jurisdiction.",
       requiredDocuments: [
@@ -64,6 +66,7 @@ async function main() {
       name: "Market Stall Permit",
       slug: "market-stall-permit",
       slaDays: 7,
+      feeGhs: 100,
       description:
         "Allocation or renewal of a licensed trading stall in an Assembly-managed market.",
       requiredDocuments: [

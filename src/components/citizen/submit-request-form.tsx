@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { submitRequest, type ActionState } from "@/actions/request-actions";
+import { formatFee } from "@/lib/format";
 
 const initialState: ActionState = undefined;
 
@@ -9,6 +10,7 @@ type ServiceTypeOption = {
   id: string;
   name: string;
   slaDays: number;
+  feeGhs: number;
   description: string;
   requiredDocuments: string[];
 };
@@ -29,7 +31,9 @@ export function SubmitRequestForm({ serviceTypes }: { serviceTypes: ServiceTypeO
             <span>
               <span className="block text-sm font-semibold text-ink">{st.name}</span>
               <span className="block text-xs text-ink-soft">{st.description}</span>
-              <span className="mt-1 block text-xs font-medium text-brass">SLA: {st.slaDays} working days</span>
+              <span className="mt-1 block text-xs font-medium text-brass">
+                SLA: {st.slaDays} working days &middot; Fee: {formatFee(st.feeGhs)}
+              </span>
               {st.requiredDocuments.length > 0 && (
                 <span className="mt-2 block text-xs text-ink-soft">
                   <span className="font-medium text-ink">You&apos;ll need:</span>
