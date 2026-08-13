@@ -15,6 +15,7 @@ export default async function MyRequestsPage() {
   });
 
   const now = new Date();
+  const approvedRequests = requests.filter((r) => r.status === "approved");
 
   return (
     <div>
@@ -30,6 +31,25 @@ export default async function MyRequestsPage() {
           New request
         </Link>
       </div>
+
+      {approvedRequests.length > 0 && (
+        <div className="mt-6 space-y-2">
+          {approvedRequests.map((r) => (
+            <div
+              key={r.id}
+              className="flex flex-wrap items-center justify-between gap-3 border border-status-ok/40 bg-status-ok/10 px-4 py-3"
+            >
+              <p className="text-sm font-medium text-status-ok">Your {r.serviceType.name} was approved.</p>
+              <Link
+                href={`/citizen/requests/${r.id}/confirmation`}
+                className="text-sm font-semibold text-status-ok hover:underline"
+              >
+                View confirmation →
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
 
       {requests.length === 0 ? (
         <p className="mt-10 text-sm text-ink-soft">You haven&apos;t submitted any requests yet.</p>

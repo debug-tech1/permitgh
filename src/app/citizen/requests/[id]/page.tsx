@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
@@ -36,6 +37,18 @@ export default async function RequestDetailPage({ params }: PageProps<"/citizen/
           <StatusBadge status={request.status} />
         </div>
       </div>
+
+      {request.status === "approved" && (
+        <div className="mt-4 flex items-center justify-between border border-status-ok/40 bg-status-ok/10 px-4 py-3">
+          <p className="text-sm font-medium text-status-ok">Approved — your confirmation is ready.</p>
+          <Link
+            href={`/citizen/requests/${request.id}/confirmation`}
+            className="text-sm font-semibold text-status-ok hover:underline"
+          >
+            View confirmation →
+          </Link>
+        </div>
+      )}
 
       <dl className="mt-6 grid grid-cols-2 gap-4 border border-line bg-paper-raised p-4 text-sm">
         <div>
