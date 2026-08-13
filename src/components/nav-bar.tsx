@@ -75,6 +75,9 @@ export async function NavBar() {
             </div>
           ) : (
             <div className="flex items-center gap-3 border-l border-line pl-5">
+              <Link href="/accountability" className="font-medium text-ink-soft hover:text-accent">
+                Accountability Dashboard
+              </Link>
               <Link href="/login" className="font-medium text-ink-soft hover:text-accent">
                 Sign in
               </Link>
