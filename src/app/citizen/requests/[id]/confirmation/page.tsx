@@ -74,7 +74,10 @@ export default async function ApprovalConfirmationPage({ params }: PageProps<"/c
           <div>
             <dt className="text-xs tracking-wide text-ink-soft uppercase">Fee</dt>
             <dd className="mt-1 font-medium text-ink">
-              {formatFee(request.feeGhs)}
+              {/* Approval is blocked until an officer assesses the fee (see
+                  actions/officer-actions.ts), so feeGhs is never null here —
+                  the fallback is just to satisfy the nullable type. */}
+              {request.feeGhs !== null ? formatFee(request.feeGhs) : "—"}
               {request.sizeTier && <span className="text-ink-soft"> ({request.sizeTier})</span>}
             </dd>
           </div>

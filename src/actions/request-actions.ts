@@ -6,7 +6,7 @@ import { prisma } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
 import { MAX_ATTACHMENTS, MAX_ATTACHMENT_BYTES, submitRequestSchema } from "@/lib/validation";
 import { computeSlaDeadline } from "@/lib/sla";
-import { findFeeTier, parseFeeTiers } from "@/lib/fees";
+import { parseFeeTiers } from "@/lib/fees";
 
 export type ActionState = { error?: string } | undefined;
 
@@ -16,7 +16,6 @@ export async function submitRequest(_prevState: ActionState, formData: FormData)
   const parsed = submitRequestSchema.safeParse({
     serviceTypeId: formData.get("serviceTypeId"),
     applicantNote: formData.get("applicantNote"),
-    sizeTier: formData.get("sizeTier") || undefined,
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Check your details and try again." };
@@ -27,20 +26,12 @@ export async function submitRequest(_prevState: ActionState, formData: FormData)
     return { error: "Choose a valid service type." };
   }
 
-  // If the service has size-based pricing, the citizen must pick a valid
-  // tier — the fee snapshot below depends on it. Flat-fee services ignore
-  // whatever (if anything) was submitted here.
+  // Cost for a tiered service is an officer's call, not the applicant's —
+  // see actions/officer-actions.ts#assessFee. Leave it unset at submission;
+  // flat-fee services still get their fee applied immediately, since there's
+  // no judgment call to make.
   const tiers = parseFeeTiers(serviceType.feeTiers);
-  let feeGhs = serviceType.feeGhs;
-  let sizeTier: string | null = null;
-  if (tiers.length > 0) {
-    const tier = findFeeTier(tiers, parsed.data.sizeTier);
-    if (!tier) {
-      return { error: "Choose a size to see the correct fee." };
-    }
-    feeGhs = tier.feeGhs;
-    sizeTier = tier.label;
-  }
+  const feeGhs = tiers.length > 0 ? null : serviceType.feeGhs;
 
   // Validate every attachment before writing anything, so a rejected upload
   // never leaves behind a request with only some of its files.
@@ -72,7 +63,6 @@ export async function submitRequest(_prevState: ActionState, formData: FormData)
       submittedAt,
       slaDeadline: computeSlaDeadline(submittedAt, serviceType.slaDays),
       feeGhs,
-      sizeTier,
     },
   });
 

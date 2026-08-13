@@ -53,8 +53,8 @@ model ServiceRequest {
   submittedAt   DateTime  @default(now())
   slaDeadline   DateTime
   resolvedAt    DateTime?
-  feeGhs        Int       @default(0) // snapshot of the resolved fee (tiered or flat) at submission — same "never drifts" rule as slaDeadline
-  sizeTier      String? // label of the chosen tier (e.g. "2 storeys"), when the service has feeTiers; null for flat-fee services
+  feeGhs        Int? // flat-fee services: set at submission. Tiered services: null until an officer assesses it — cost for those is an officer judgment call, not self-reported. Never changes once set, same "never drifts" rule as slaDeadline
+  sizeTier      String? // label of the assessed tier (e.g. "2 storeys"), when the service has feeTiers; null for flat-fee services
 
   citizen     User            @relation("CitizenRequests", fields: [citizenId], references: [id])
   serviceType ServiceType     @relation(fields: [serviceTypeId], references: [id])

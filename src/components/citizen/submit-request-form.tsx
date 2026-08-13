@@ -35,24 +35,14 @@ export function SubmitRequestForm({ serviceTypes }: { serviceTypes: ServiceTypeO
               <span className="block text-xs text-ink-soft">{st.description}</span>
               <span className="mt-1 block text-xs font-medium text-brass">
                 SLA: {st.slaDays} working days &middot; Fee:{" "}
-                {st.feeTiers.length > 0 ? `from ${formatFee(st.feeTiers[0].feeGhs)}` : formatFee(st.feeGhs)}
+                {st.feeTiers.length > 0
+                  ? `${formatFee(st.feeTiers[0].feeGhs)}–${formatFee(st.feeTiers[st.feeTiers.length - 1].feeGhs)}, assessed by the reviewing officer`
+                  : formatFee(st.feeGhs)}
               </span>
               {st.feeTiers.length > 0 && (
-                <span className="mt-2 block text-xs">
-                  <span className="font-medium text-ink">Size (sets the fee):</span>
-                  <span className="mt-1 flex flex-wrap gap-2">
-                    {st.feeTiers.map((tier) => (
-                      <label
-                        key={tier.label}
-                        className="flex cursor-pointer items-center gap-1.5 border border-line bg-paper px-2 py-1 has-[:checked]:border-brass has-[:checked]:bg-brass/10"
-                      >
-                        <input type="radio" name="sizeTier" value={tier.label} className="accent-brass" />
-                        <span className="text-ink-soft">
-                          {tier.label} — <span className="font-medium text-ink">{formatFee(tier.feeGhs)}</span>
-                        </span>
-                      </label>
-                    ))}
-                  </span>
+                <span className="mt-1 block text-xs text-ink-soft">
+                  The exact fee depends on the size of what you&apos;re building ({st.feeTiers.map((t) => t.label).join(" / ")}
+                  ) — the officer reviewing your application sets it once they&apos;ve seen your plans, not you.
                 </span>
               )}
               {st.requiredDocuments.length > 0 && (

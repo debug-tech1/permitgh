@@ -18,13 +18,19 @@ export const submitRequestSchema = z.object({
     .trim()
     .min(10, "Describe your request in at least 10 characters")
     .max(2000, "Keep it under 2000 characters"),
-  sizeTier: z.string().trim().max(60).optional(),
 });
 
 export const updateStatusSchema = z.object({
   requestId: z.string().min(1),
   status: z.enum(["under_review", "additional_info_needed", "approved", "rejected"]),
   remark: z.string().trim().max(1000).optional().default(""),
+});
+
+// Cost for a tiered service is the officer's call, made from their queue —
+// see actions/officer-actions.ts#assessFee.
+export const assessFeeSchema = z.object({
+  requestId: z.string().min(1),
+  sizeTier: z.string().trim().min(1, "Choose a size"),
 });
 
 export const serviceConfigSchema = z.object({

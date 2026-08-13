@@ -65,8 +65,14 @@ export default async function RequestDetailPage({ params }: PageProps<"/citizen/
         <div>
           <dt className="text-xs tracking-wide text-ink-soft uppercase">Fee</dt>
           <dd className="mt-1 font-medium text-ink">
-            {formatFee(request.feeGhs)}
-            {request.sizeTier && <span className="text-ink-soft"> ({request.sizeTier})</span>}
+            {request.feeGhs !== null ? (
+              <>
+                {formatFee(request.feeGhs)}
+                {request.sizeTier && <span className="text-ink-soft"> ({request.sizeTier})</span>}
+              </>
+            ) : (
+              <span className="text-brass">Pending officer assessment</span>
+            )}
           </dd>
         </div>
         <div className="col-span-2">

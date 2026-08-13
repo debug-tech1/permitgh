@@ -4,7 +4,9 @@ import { getSession } from "@/lib/auth";
 import { isOverdue, isTerminalStatus, NEXT_STATUSES, REQUEST_STATUSES, STATUS_LABELS, type RequestStatus } from "@/lib/sla";
 import { StatusBadge, OverdueBadge } from "@/components/status-badge";
 import { UpdateStatusForm } from "@/components/officer/update-status-form";
+import { AssessFeeForm } from "@/components/officer/assess-fee-form";
 import { formatFee } from "@/lib/format";
+import { parseFeeTiers } from "@/lib/fees";
 
 export default async function OfficerQueuePage({ searchParams }: PageProps<"/officer/queue">) {
   const session = await getSession();
@@ -28,6 +30,7 @@ export default async function OfficerQueuePage({ searchParams }: PageProps<"/off
 
   const now = new Date();
   const visible = overdueOnly ? requests.filter((r) => isOverdue(now, r.slaDeadline, r.status)) : requests;
+  const tiers = parseFeeTiers(serviceType?.feeTiers);
 
   return (
     <div>
@@ -73,8 +76,15 @@ export default async function OfficerQueuePage({ searchParams }: PageProps<"/off
                     <p className="text-sm font-semibold text-ink">{r.citizen.name}</p>
                     <p className="mt-0.5 text-xs text-ink-soft">
                       Submitted {r.submittedAt.toLocaleDateString()} &middot; SLA deadline{" "}
-                      {r.slaDeadline.toLocaleDateString()} &middot; Fee {formatFee(r.feeGhs)}
-                      {r.sizeTier && ` (${r.sizeTier})`}
+                      {r.slaDeadline.toLocaleDateString()} &middot; Fee{" "}
+                      {r.feeGhs !== null ? (
+                        <>
+                          {formatFee(r.feeGhs)}
+                          {r.sizeTier && ` (${r.sizeTier})`}
+                        </>
+                      ) : (
+                        <span className="font-medium text-brass">pending assessment</span>
+                      )}
                     </p>
                     <p className="mt-2 max-w-lg text-sm text-ink">{r.applicantNote}</p>
                     {r.attachments.length > 0 && (
@@ -110,7 +120,8 @@ export default async function OfficerQueuePage({ searchParams }: PageProps<"/off
                   </div>
                 </div>
                 {!isTerminalStatus(r.status) && (
-                  <div className="mt-4 border-t border-line pt-4">
+                  <div className="mt-4 space-y-3 border-t border-line pt-4">
+                    {r.feeGhs === null && tiers.length > 0 && <AssessFeeForm requestId={r.id} tiers={tiers} />}
                     <UpdateStatusForm requestId={r.id} nextStatuses={NEXT_STATUSES[r.status as RequestStatus] ?? []} />
                   </div>
                 )}

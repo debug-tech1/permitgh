@@ -3,8 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
-import { updateStatusSchema } from "@/lib/validation";
+import { assessFeeSchema, updateStatusSchema } from "@/lib/validation";
 import { isTerminalStatus, NEXT_STATUSES, type RequestStatus } from "@/lib/sla";
+import { findFeeTier, parseFeeTiers } from "@/lib/fees";
 
 export type ActionState = { error?: string } | undefined;
 
@@ -35,6 +36,11 @@ export async function updateRequestStatus(_prevState: ActionState, formData: For
   if (!allowed.includes(parsed.data.status)) {
     return { error: "That status change isn't allowed from the current state." };
   }
+  // Cost for a tiered service is an officer's call (see assessFee below) —
+  // a request can't be approved until that call has actually been made.
+  if (parsed.data.status === "approved" && request.feeGhs === null) {
+    return { error: "Assess the fee before approving this request." };
+  }
 
   const changedAt = new Date();
   await prisma.$transaction([
@@ -55,6 +61,49 @@ export async function updateRequestStatus(_prevState: ActionState, formData: For
       },
     }),
   ]);
+
+  revalidatePath("/officer/queue");
+  revalidatePath(`/citizen/requests/${request.id}`);
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/");
+}
+
+// The officer's judgment call on cost for a tiered service — see
+// lib/fees.ts. Settable (and re-settable) any time before the request
+// reaches a terminal status; updateRequestStatus above refuses to approve
+// until this has actually been called at least once.
+export async function assessFee(_prevState: ActionState, formData: FormData): Promise<ActionState> {
+  const session = await requireSession(["officer"]);
+
+  const parsed = assessFeeSchema.safeParse({
+    requestId: formData.get("requestId"),
+    sizeTier: formData.get("sizeTier"),
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Check your input and try again." };
+  }
+
+  const request = await prisma.serviceRequest.findUnique({
+    where: { id: parsed.data.requestId },
+    include: { serviceType: true },
+  });
+  if (!request || request.serviceTypeId !== session.assignedServiceTypeId) {
+    return { error: "That request isn't in your queue." };
+  }
+  if (isTerminalStatus(request.status)) {
+    return { error: "This request is already closed." };
+  }
+
+  const tiers = parseFeeTiers(request.serviceType.feeTiers);
+  const tier = findFeeTier(tiers, parsed.data.sizeTier);
+  if (!tier) {
+    return { error: "Choose a valid size." };
+  }
+
+  await prisma.serviceRequest.update({
+    where: { id: request.id },
+    data: { feeGhs: tier.feeGhs, sizeTier: tier.label },
+  });
 
   revalidatePath("/officer/queue");
   revalidatePath(`/citizen/requests/${request.id}`);
