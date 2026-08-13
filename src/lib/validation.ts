@@ -66,6 +66,10 @@ export const addAttachmentsSchema = z.object({
   requestId: z.string().min(1),
 });
 
+export const resetPasswordSchema = z.object({
+  userId: z.string().min(1),
+});
+
 export const serviceConfigSchema = z.object({
   serviceTypeId: z.string().min(1),
   slaDays: z.coerce.number().int().min(1, "Must be at least 1 day").max(90, "Keep it under 90 days"),

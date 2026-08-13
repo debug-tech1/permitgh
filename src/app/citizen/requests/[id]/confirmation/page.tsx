@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { formatFee, referenceNumber } from "@/lib/format";
-import { PrintButton } from "@/components/citizen/print-button";
+import { PrintButton } from "@/components/print-button";
 
 export default async function ApprovalConfirmationPage({ params }: PageProps<"/citizen/requests/[id]/confirmation">) {
   const { id } = await params;

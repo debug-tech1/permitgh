@@ -2,6 +2,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
+import { randomInt } from "node:crypto";
 
 const SESSION_COOKIE = "servetrack_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 days
@@ -29,6 +30,19 @@ export async function hashPassword(password: string): Promise<string> {
 
 export async function verifyPassword(password: string, hash: string): Promise<boolean> {
   return bcrypt.compare(password, hash);
+}
+
+// Ambiguous characters (0/O, 1/I/l) left out so a temp password read aloud
+// over the phone doesn't get mistyped — an admin resetting a citizen's
+// password has to relay it through the Assembly's own channels, not email.
+const TEMP_PASSWORD_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+
+export function generateTempPassword(length = 10): string {
+  let out = "";
+  for (let i = 0; i < length; i++) {
+    out += TEMP_PASSWORD_ALPHABET[randomInt(TEMP_PASSWORD_ALPHABET.length)];
+  }
+  return out;
 }
 
 /** Sets the session cookie. Only callable from a Server Action or Route Handler. */
