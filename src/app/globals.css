@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
+/* Civic-ledger palette — the same tokens used in the published system
+   design doc, reused here so the SRS artifact and the running app read as
+   one system rather than two unrelated deliverables. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --paper: #eef1ec;
+  --paper-raised: #e3e9e1;
+  --ink: #17242a;
+  --ink-soft: #4b5b5c;
+  --accent: #2f6f62;
+  --accent-brass: #8a6a3c;
+  --line: #c9d0c6;
+  --status-ok: #3c8a5b;
+  --status-warn: #c97a2b;
+  --status-critical: #b5473a;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --paper: #121716;
+    --paper-raised: #1b2220;
+    --ink: #e7ede9;
+    --ink-soft: #a7b5af;
+    --accent: #7fc2ae;
+    --accent-brass: #d0a968;
+    --line: #2c3733;
+    --status-ok: #6fbe8c;
+    --status-warn: #e0a25b;
+    --status-critical: #e08072;
   }
 }
 
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-accent: var(--accent);
+  --color-brass: var(--accent-brass);
+  --color-line: var(--line);
+  --color-status-ok: var(--status-ok);
+  --color-status-warn: var(--status-warn);
+  --color-status-critical: var(--status-critical);
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--paper);
 }

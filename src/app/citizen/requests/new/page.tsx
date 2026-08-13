@@ -1,0 +1,18 @@
+import { prisma } from "@/lib/db";
+import { SubmitRequestForm } from "@/components/citizen/submit-request-form";
+
+export default async function NewRequestPage() {
+  const serviceTypes = await prisma.serviceType.findMany({ orderBy: { name: "asc" } });
+
+  return (
+    <div className="mx-auto max-w-2xl">
+      <h1 className="font-display text-2xl font-semibold text-ink">Submit a new request</h1>
+      <p className="mt-1 text-sm text-ink-soft">
+        Choose the service you need — your SLA deadline is set the moment you submit.
+      </p>
+      <div className="mt-6 border border-line bg-paper-raised p-6">
+        <SubmitRequestForm serviceTypes={serviceTypes} />
+      </div>
+    </div>
+  );
+}

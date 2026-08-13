@@ -39,3 +39,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/src/generated/prisma
+
+# local sqlite dev database — never committed, recreated via
+# `npx prisma migrate dev` + `npx prisma db seed`
+*.db
+*.db-journal
+
+# AI agent skill docs auto-installed by `prisma init` — dev tooling, not app code
+/.claude/skills
+/.agents
+/.windsurf
+skills-lock.json
+
+# editors
+.vscode/
+.idea/

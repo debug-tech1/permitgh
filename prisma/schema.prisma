@@ -1,0 +1,86 @@
+// ServeTrack data model — see FIG. 3 (Entity-Relationship Diagram) in the
+// published system design doc for the illustrative version of this schema.
+// Deliberately avoids Prisma enums so the same schema works unchanged on
+// SQLite (local dev) and PostgreSQL (production) — a one-line datasource swap.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id                    String   @id @default(uuid())
+  name                  String
+  email                 String   @unique
+  passwordHash          String
+  role                  String // "citizen" | "officer" | "admin"
+  assignedServiceTypeId String?
+  createdAt             DateTime @default(now())
+
+  assignedServiceType ServiceType?     @relation(fields: [assignedServiceTypeId], references: [id])
+  requestsSubmitted   ServiceRequest[] @relation("CitizenRequests")
+  statusChangesMade   StatusHistory[]  @relation("OfficerStatusChanges")
+
+  @@index([role])
+}
+
+model ServiceType {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  slaDays     Int
+  description String
+  createdAt   DateTime @default(now())
+
+  requests ServiceRequest[]
+  officers User[]
+}
+
+model ServiceRequest {
+  id            String    @id @default(uuid())
+  citizenId     String
+  serviceTypeId String
+  status        String // "received" | "under_review" | "additional_info_needed" | "approved" | "rejected"
+  applicantNote String
+  submittedAt   DateTime  @default(now())
+  slaDeadline   DateTime
+  resolvedAt    DateTime?
+
+  citizen     User            @relation("CitizenRequests", fields: [citizenId], references: [id])
+  serviceType ServiceType     @relation(fields: [serviceTypeId], references: [id])
+  history     StatusHistory[]
+  attachments Attachment[]
+
+  @@index([serviceTypeId, status])
+  @@index([citizenId])
+}
+
+model StatusHistory {
+  id        String   @id @default(uuid())
+  requestId String
+  status    String
+  remark    String?
+  changedById String
+  changedAt DateTime @default(now())
+
+  request   ServiceRequest @relation(fields: [requestId], references: [id])
+  changedBy User           @relation("OfficerStatusChanges", fields: [changedById], references: [id])
+
+  @@index([requestId])
+}
+
+model Attachment {
+  id         String   @id @default(uuid())
+  requestId  String
+  fileName   String
+  fileUrl    String // data URI — demo-scale only, see technical debt log
+  uploadedAt DateTime @default(now())
+
+  request ServiceRequest @relation(fields: [requestId], references: [id])
+
+  @@index([requestId])
+}
