@@ -19,6 +19,8 @@ export async function registerCitizen(_prevState: ActionState, formData: FormDat
     name: formData.get("name"),
     email: formData.get("email"),
     password: formData.get("password"),
+    phone: formData.get("phone"),
+    gpsAddress: formData.get("gpsAddress"),
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Check your details and try again." };
@@ -31,7 +33,14 @@ export async function registerCitizen(_prevState: ActionState, formData: FormDat
 
   const passwordHash = await hashPassword(parsed.data.password);
   const user = await prisma.user.create({
-    data: { name: parsed.data.name, email: parsed.data.email, passwordHash, role: "citizen" },
+    data: {
+      name: parsed.data.name,
+      email: parsed.data.email,
+      passwordHash,
+      role: "citizen",
+      phone: parsed.data.phone,
+      gpsAddress: parsed.data.gpsAddress,
+    },
   });
 
   await createSessionCookie({ sub: user.id, role: "citizen", name: user.name, assignedServiceTypeId: null });

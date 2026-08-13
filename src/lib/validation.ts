@@ -4,6 +4,17 @@ export const registerSchema = z.object({
   name: z.string().trim().min(2, "Enter your full name").max(120),
   email: z.string().trim().toLowerCase().email("Enter a valid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
+  phone: z
+    .string()
+    .trim()
+    .min(9, "Enter a valid phone number")
+    .max(20, "Keep it under 20 characters")
+    .regex(/^[+\d][\d\s-]*$/, "Use digits only (e.g. 024 123 4567)"),
+  gpsAddress: z
+    .string()
+    .trim()
+    .min(4, "Enter your GPS address (e.g. GA-184-9312)")
+    .max(30, "Keep it under 30 characters"),
 });
 
 export const loginSchema = z.object({
@@ -18,6 +29,11 @@ export const submitRequestSchema = z.object({
     .trim()
     .min(10, "Describe your request in at least 10 characters")
     .max(2000, "Keep it under 2000 characters"),
+  propertyLocation: z
+    .string()
+    .trim()
+    .min(4, "Enter the property's location (GPS address or a description)")
+    .max(200, "Keep it under 200 characters"),
 });
 
 export const updateStatusSchema = z.object({

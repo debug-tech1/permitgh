@@ -16,6 +16,7 @@ export async function submitRequest(_prevState: ActionState, formData: FormData)
   const parsed = submitRequestSchema.safeParse({
     serviceTypeId: formData.get("serviceTypeId"),
     applicantNote: formData.get("applicantNote"),
+    propertyLocation: formData.get("propertyLocation"),
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Check your details and try again." };
@@ -59,6 +60,7 @@ export async function submitRequest(_prevState: ActionState, formData: FormData)
       serviceTypeId: serviceType.id,
       status: "received",
       applicantNote: parsed.data.applicantNote,
+      propertyLocation: parsed.data.propertyLocation,
       submittedAt,
       slaDeadline: computeSlaDeadline(submittedAt, serviceType.slaDays),
       feeGhs,

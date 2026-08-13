@@ -105,6 +105,12 @@ export default async function RequestDetailPage({ params }: PageProps<"/citizen/
             )}
           </dd>
         </div>
+        {request.propertyLocation && (
+          <div className="col-span-2">
+            <dt className="text-xs tracking-wide text-ink-soft uppercase">Property / site location</dt>
+            <dd className="mt-1 text-ink">{request.propertyLocation}</dd>
+          </div>
+        )}
         <div className="col-span-2">
           <dt className="text-xs tracking-wide text-ink-soft uppercase">Your note</dt>
           <dd className="mt-1 text-ink">{request.applicantNote}</dd>

@@ -73,6 +73,19 @@ export function SubmitRequestForm({ serviceTypes }: { serviceTypes: ServiceTypeO
       </fieldset>
 
       <label className="flex flex-col gap-1 text-sm">
+        <span className="font-medium text-ink">Property / site location</span>
+        <input
+          type="text"
+          name="propertyLocation"
+          required
+          minLength={4}
+          placeholder="GPS address (e.g. GA-184-9312) or a description of where the property is"
+          className="rounded-sm border border-line bg-paper px-3 py-2 text-ink outline-none focus:border-accent"
+        />
+        <span className="text-xs text-ink-soft">Where the property this request concerns is located.</span>
+      </label>
+
+      <label className="flex flex-col gap-1 text-sm">
         <span className="font-medium text-ink">Describe your request</span>
         <textarea
           name="applicantNote"

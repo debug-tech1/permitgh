@@ -19,6 +19,8 @@ model User {
   email                 String   @unique
   passwordHash          String
   role                  String // "citizen" | "officer" | "admin"
+  phone                 String? // required by the registration form for new citizens; nullable here only for accounts that predate this field
+  gpsAddress            String? // GhanaPostGPS digital address (e.g. "GA-184-9312"), same "required going forward, nullable for old rows" rule as phone
   assignedServiceTypeId String?
   createdAt             DateTime @default(now())
 
@@ -50,6 +52,7 @@ model ServiceRequest {
   serviceTypeId String
   status        String // "received" | "under_review" | "additional_info_needed" | "approved" | "rejected"
   applicantNote String
+  propertyLocation String? // where the property/site is — GPS address or a plain description. Required by the submission form going forward; nullable here only for requests that predate this field
   submittedAt   DateTime  @default(now())
   slaDeadline   DateTime
   resolvedAt    DateTime?

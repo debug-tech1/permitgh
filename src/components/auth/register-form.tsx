@@ -31,6 +31,28 @@ export function RegisterForm() {
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
+        <span className="font-medium text-ink">Phone number</span>
+        <input
+          type="tel"
+          name="phone"
+          required
+          autoComplete="tel"
+          placeholder="024 123 4567"
+          className="rounded-sm border border-line bg-paper px-3 py-2 text-ink outline-none focus:border-accent"
+        />
+      </label>
+      <label className="flex flex-col gap-1 text-sm">
+        <span className="font-medium text-ink">GPS address</span>
+        <input
+          type="text"
+          name="gpsAddress"
+          required
+          placeholder="GA-184-9312"
+          className="rounded-sm border border-line bg-paper px-3 py-2 text-ink outline-none focus:border-accent"
+        />
+        <span className="text-xs text-ink-soft">Your GhanaPostGPS digital address.</span>
+      </label>
+      <label className="flex flex-col gap-1 text-sm">
         <span className="font-medium text-ink">Password</span>
         <input
           type="password"

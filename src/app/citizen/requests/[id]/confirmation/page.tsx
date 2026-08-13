@@ -57,6 +57,12 @@ export default async function ApprovalConfirmationPage({ params }: PageProps<"/c
             <dt className="text-xs tracking-wide text-ink-soft uppercase">Applicant</dt>
             <dd className="mt-1 font-medium text-ink">{request.citizen.name}</dd>
           </div>
+          {request.propertyLocation && (
+            <div>
+              <dt className="text-xs tracking-wide text-ink-soft uppercase">Location</dt>
+              <dd className="mt-1 font-medium text-ink">{request.propertyLocation}</dd>
+            </div>
+          )}
           <div>
             <dt className="text-xs tracking-wide text-ink-soft uppercase">Approved</dt>
             <dd className="mt-1 font-medium text-ink">

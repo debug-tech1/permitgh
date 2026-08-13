@@ -52,6 +52,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
             <tr>
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Email</th>
+              <th className="px-4 py-3">Contact</th>
               <th className="px-4 py-3">Role</th>
               <th className="px-4 py-3">Detail</th>
               <th className="px-4 py-3">Joined</th>
@@ -63,6 +64,16 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
               <tr key={u.id}>
                 <td className="px-4 py-3 font-medium text-ink">{u.name}</td>
                 <td className="px-4 py-3 text-ink-soft">{u.email}</td>
+                <td className="px-4 py-3 text-ink-soft">
+                  {u.phone ? (
+                    <>
+                      <span className="block">{u.phone}</span>
+                      {u.gpsAddress && <span className="block text-xs">{u.gpsAddress}</span>}
+                    </>
+                  ) : (
+                    "—"
+                  )}
+                </td>
                 <td className="px-4 py-3">
                   <span className="text-xs font-semibold tracking-wide text-brass uppercase">
                     {ROLE_LABELS[u.role] ?? u.role}

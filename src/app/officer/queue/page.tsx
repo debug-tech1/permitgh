@@ -78,11 +78,19 @@ export default async function OfficerQueuePage({ searchParams }: PageProps<"/off
               <li key={r.id} className="border border-line bg-paper-raised p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-ink">{r.citizen.name}</p>
+                    <p className="text-sm font-semibold text-ink">
+                      {r.citizen.name}
+                      {r.citizen.phone && <span className="ml-2 font-normal text-ink-soft">{r.citizen.phone}</span>}
+                    </p>
                     <p className="mt-0.5 text-xs text-ink-soft">
                       Submitted {r.submittedAt.toLocaleDateString()} &middot; SLA deadline{" "}
                       {r.slaDeadline.toLocaleDateString()}
                     </p>
+                    {r.propertyLocation && (
+                      <p className="mt-0.5 text-xs text-ink-soft">
+                        <span className="font-medium text-ink">Location:</span> {r.propertyLocation}
+                      </p>
+                    )}
                     <p className="mt-1 text-xs">
                       {r.feeGhs !== null ? (
                         <span className="text-ink-soft">
