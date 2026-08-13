@@ -4,12 +4,17 @@ import { computeOfficerWorkload, computeServiceTypeStats } from "@/lib/stats";
 import { daysBetween, REQUEST_STATUSES, STATUS_LABELS, type RequestStatus } from "@/lib/sla";
 import { referenceNumber } from "@/lib/format";
 
+// Light-background-tuned shades (600/700 weight reads clearly on white;
+// the old dark-console version used 300/400 pastels that were only
+// legible against near-black). "under_review" gets its own amber now
+// instead of reusing the console's green accent, which would otherwise be
+// indistinguishable from "approved".
 const STATUS_STYLES: Record<RequestStatus, { text: string; dot: string; bg: string }> = {
-  received: { text: "text-slate-300", dot: "bg-slate-400", bg: "bg-slate-400/10" },
-  under_review: { text: "text-[var(--console-gold)]", dot: "bg-[var(--console-gold)]", bg: "bg-[var(--console-gold)]/10" },
-  additional_info_needed: { text: "text-sky-300", dot: "bg-sky-400", bg: "bg-sky-400/10" },
-  approved: { text: "text-emerald-300", dot: "bg-emerald-400", bg: "bg-emerald-400/10" },
-  rejected: { text: "text-rose-300", dot: "bg-rose-400", bg: "bg-rose-400/10" },
+  received: { text: "text-slate-600", dot: "bg-slate-500", bg: "bg-slate-500/10" },
+  under_review: { text: "text-amber-700", dot: "bg-amber-500", bg: "bg-amber-500/10" },
+  additional_info_needed: { text: "text-sky-700", dot: "bg-sky-500", bg: "bg-sky-500/10" },
+  approved: { text: "text-emerald-700", dot: "bg-emerald-500", bg: "bg-emerald-500/10" },
+  rejected: { text: "text-rose-700", dot: "bg-rose-500", bg: "bg-rose-500/10" },
 };
 
 function StatusPill({ status }: { status: RequestStatus }) {
@@ -28,7 +33,7 @@ function KpiCard({ label, value, critical }: { label: string; value: string | nu
   return (
     <div className="border border-[var(--console-border)] bg-[var(--console-card)] p-4">
       <p className="text-[11px] tracking-wide text-[var(--console-ink-soft)] uppercase">{label}</p>
-      <p className={`mt-1 text-3xl font-bold ${critical ? "text-rose-400" : "text-[var(--console-ink)]"}`}>{value}</p>
+      <p className={`mt-1 text-3xl font-bold ${critical ? "text-rose-600" : "text-[var(--console-ink)]"}`}>{value}</p>
     </div>
   );
 }
@@ -203,7 +208,7 @@ export default async function AdminDashboardPage() {
                       <span className="text-[var(--console-ink-soft)]">{STATUS_LABELS[s]}</span>
                       <span className="font-semibold text-[var(--console-ink)] tabular-nums">{count}</span>
                     </div>
-                    <div className="mt-1 h-1 w-full rounded-full bg-white/5">
+                    <div className="mt-1 h-1 w-full rounded-full bg-[var(--console-border)]">
                       <div className={`h-full rounded-full ${style.dot}`} style={{ width: `${pct}%` }} />
                     </div>
                   </div>
@@ -220,7 +225,7 @@ export default async function AdminDashboardPage() {
                   <span className="text-[var(--console-ink-soft)]">{o.officerName}</span>
                   <span className="tabular-nums text-[var(--console-ink)]">
                     {o.openCount} open
-                    {o.overdueCount > 0 && <span className="ml-1 text-rose-400">&middot; {o.overdueCount} overdue</span>}
+                    {o.overdueCount > 0 && <span className="ml-1 text-rose-600">&middot; {o.overdueCount} overdue</span>}
                   </span>
                 </div>
               ))}
@@ -232,7 +237,7 @@ export default async function AdminDashboardPage() {
             <ul className="mt-3 space-y-2 text-xs text-[var(--console-ink-soft)]">
               {overdueAdvisories.map((text) => (
                 <li key={text} className="flex items-start gap-2">
-                  <span className="mt-1 h-1.5 w-1.5 flex-none rounded-full bg-rose-400" />
+                  <span className="mt-1 h-1.5 w-1.5 flex-none rounded-full bg-rose-600" />
                   {text}
                 </li>
               ))}
@@ -241,7 +246,7 @@ export default async function AdminDashboardPage() {
                 Required-document checklists published for all services
               </li>
               <li className="flex items-start gap-2">
-                <span className="mt-1 h-1.5 w-1.5 flex-none rounded-full bg-emerald-400" />
+                <span className="mt-1 h-1.5 w-1.5 flex-none rounded-full bg-emerald-600" />
                 ServeTrack platform operational
               </li>
             </ul>

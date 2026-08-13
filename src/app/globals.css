@@ -1,34 +1,27 @@
 @import "tailwindcss";
 
-/* Civic-ledger palette — the same tokens used in the published system
-   design doc, reused here so the SRS artifact and the running app read as
-   one system rather than two unrelated deliverables. */
+/* Civic-ledger palette — brightened to a green-and-white theme, light-only
+   by design. Earlier versions followed prefers-color-scheme automatically,
+   but that meant a system in dark mode never actually saw the bright
+   theme — there's no in-app toggle yet, so "brighter" has to mean the
+   default, not a mode someone has to opt into. Revisit if a real
+   light/dark switch gets built later. */
 :root {
-  --paper: #eef1ec;
-  --paper-raised: #e3e9e1;
-  --ink: #17242a;
-  --ink-soft: #4b5b5c;
-  --accent: #2f6f62;
-  --accent-brass: #8a6a3c;
-  --line: #c9d0c6;
-  --status-ok: #3c8a5b;
+  --paper: #ffffff;
+  --paper-raised: #eaf7ef;
+  --ink: #12271c;
+  --ink-soft: #4c6459;
+  --accent: #15803d;
+  /* Deeper emphasis green for eyebrow labels/callouts. Variable (and the
+     Tailwind "brass" utility it feeds) is a legacy name from an earlier
+     bronze/gold secondary accent — kept rather than renamed across the
+     ~10 files that use text-brass/bg-brass/border-brass for one color
+     swap; tracked as technical debt, not a silent inconsistency. */
+  --accent-brass: #0b5c2e;
+  --line: #d6ebdc;
+  --status-ok: #15803d;
   --status-warn: #c97a2b;
   --status-critical: #b5473a;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #121716;
-    --paper-raised: #1b2220;
-    --ink: #e7ede9;
-    --ink-soft: #a7b5af;
-    --accent: #7fc2ae;
-    --accent-brass: #d0a968;
-    --line: #2c3733;
-    --status-ok: #6fbe8c;
-    --status-warn: #e0a25b;
-    --status-critical: #e08072;
-  }
 }
 
 @theme inline {
@@ -58,17 +51,20 @@ body {
   color: var(--paper);
 }
 
-/* Ops-console palette — deliberately dark-only, scoped to the admin
-   performance dashboard. A command-center screen meant to be watched, not
-   read like a document, so it doesn't follow the civic-ledger light/dark
-   system the rest of the app uses. Contained to .ops-console on purpose. */
+/* Ops-console — the admin performance dashboard used to be deliberately
+   dark-only; it now shares the same bright green-and-white identity as
+   the rest of the app. Kept as its own scoped token set rather than
+   merged into the tokens above, since the dense KPI-card layout reads as
+   a distinct "screen" even with matching colors — see technical debt log
+   for the case to consolidate these later. */
 .ops-console {
-  --console-bg: #0b0f17;
-  --console-card: #121826;
-  --console-border: #1e2635;
-  --console-ink: #e8ecf3;
-  --console-ink-soft: #8b93a7;
-  --console-gold: #f0b429;
+  --console-bg: #ffffff;
+  --console-card: #eaf7ef;
+  --console-border: #d6ebdc;
+  --console-ink: #12271c;
+  --console-ink-soft: #4c6459;
+  /* Legacy name from the earlier gold accent — see --accent-brass note above. */
+  --console-gold: #0f7a3d;
 }
 
 @media print {
